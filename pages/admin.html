@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Administration - CampusNest</title>
+<style>
+:root{--navy:#174f8a;--blue:#245fb3;--teal:#0b4f52;--ink:#17212b;--muted:#74808a;--line:#e5eaef;--canvas:#f4f7fa}*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--canvas)}button,a{font:inherit}.dashboard-shell{min-height:100vh;display:grid;grid-template-columns:230px minmax(0,1fr)}.sidebar{position:sticky;top:0;height:100vh;padding:28px 16px 20px;background:linear-gradient(180deg,#1a568e,#123f70);color:#fff;display:flex;flex-direction:column}.brand{color:#fff;font-size:19px;font-weight:850;text-decoration:none;margin:0 12px 34px}.tabs{display:flex;flex-direction:column;gap:6px}.tabs button{height:48px;border:0;border-radius:8px;background:transparent;color:#d9e8f6;text-align:left;padding:0 14px;font-size:13px;font-weight:700;cursor:pointer}.tabs button.active,.tabs button:hover{background:rgba(255,255,255,.16);color:#fff}.sidebar-footer{margin-top:auto}.logout{display:block;height:44px;color:#d9e8f6;text-decoration:none;font-size:13px;font-weight:700;padding:14px}.workspace{min-width:0}.topbar{height:78px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 34px}.topbar h1{margin:0;font-size:21px}.top-actions{margin-left:auto}.profile{height:38px;border-radius:19px;background:#edf3f8;padding:10px 12px;font-size:12px;font-weight:800}.content{padding:28px 34px}.panel-box{border:1px solid var(--line);border-radius:12px;background:#fff;padding:18px}.panel-box h2{margin:0 0 14px;font-size:16px}.table{width:100%;border-collapse:collapse}.table th,.table td{border-bottom:1px solid var(--line);padding:12px 10px;text-align:left;font-size:12px}.table th{background:#f8fafb;color:var(--muted);font-size:11px;text-transform:uppercase}.action{border:0;border-radius:6px;background:#edf3f8;color:var(--navy);padding:7px 9px;margin:2px;font-size:11px;font-weight:800}@media(max-width:900px){.dashboard-shell{grid-template-columns:76px minmax(0,1fr)}.sidebar{padding-inline:10px}.brand{font-size:0}.tabs button{font-size:0;text-align:center}.topbar{padding:0 18px}.content{padding:22px 18px}}@media(max-width:560px){.dashboard-shell{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.tabs{flex-direction:row}.tabs button{min-width:44px}.sidebar-footer{display:none}}
+</style>
+</style>
+<link rel="stylesheet" href="../css/app-theme.css">
+</head>
+<body>
+<script>location.replace('dashboard.html');</script>
+<div class="dashboard-shell">
+<aside class="sidebar">
+<a class="brand" href="../index.html"><img class="brand-logo" src="../assets/images/mouse-solution-logo.jpeg" alt="MOUSE Solution"></a>
+<nav class="tabs" aria-label="Administration navigation">
+<button class="active" data-view="users">Users</button>
+<button data-view="listings">Listings</button>
+<button data-view="jobs">Jobs</button>
+<button data-view="repairs">Repairs</button>
+</nav>
+<div class="sidebar-footer"><a class="logout" href="../php/logout.php">Log out</a></div>
+</aside>
+<section class="workspace">
+<header class="topbar"><h1>Administration</h1><div class="top-actions"><div class="profile">Administrator</div></div></header>
+<main class="content"><div class="panel-box"><h2>Platform management</h2><div id="content"></div></div></main>
+</section>
+</div>
+<script>
+let data = {};
+const content = document.querySelector('#content');
+
+async function load() {
+  const response = await fetch('../php/admin.php');
+  if (response.status === 403) {
+    location.href = 'login.html';
+    return;
+  }
+  data = await response.json();
+  show(document.querySelector('.tabs button.active').dataset.view);
+}
+
+function show(view) {
+  const rows = data[view] || [];
+  if (!rows.length) {
+    content.innerHTML = '<p>No records.</p>';
+    return;
+  }
+
+  const keys = view === 'users'
+    ? ['full_name','role','email','active','approved']
+    : view === 'listings'
+      ? ['title','city','price','status']
+      : view === 'jobs'
+        ? ['title','location','status']
+        : ['title','status','landlord_decision'];
+
+  let html = '<table class="table"><thead><tr>' + keys.map((key) => '<th>' + key.replace('_',' ') + '</th>').join('') + '<th>Actions</th></tr></thead><tbody>';
+  rows.forEach((row) => {
+    html += '<tr>' + keys.map((key) => '<td>' + (row[key] ?? '') + '</td>').join('') + '<td>' + actions(view, row.id) + '</td></tr>';
+  });
+  content.innerHTML = html + '</tbody></table>';
+}
+
+function actions(view, id) {
+  if (view === 'users') return '<button class="action" onclick="act(\'approve_user\',' + id + ')" >Approve</button><button class="action" onclick="act(\'suspend_user\',' + id + ')" >Suspend</button><button class="action" onclick="act(\'activate_user\',' + id + ')" >Activate</button>';
+  if (view === 'listings') return '<button class="action" onclick="act(\'approve_listing\',' + id + ')" >Approve</button><button class="action" onclick="act(\'reject_listing\',' + id + ')" >Reject</button>';
+  if (view === 'jobs') return '<button class="action" onclick="act(\'approve_job\',' + id + ')" >Approve</button><button class="action" onclick="act(\'reject_job\',' + id + ')" >Reject</button>';
+  return '';
+}
+
+async function act(action, id) {
+  await fetch('../php/admin.php', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    body: new URLSearchParams({action, id})
+  });
+  load();
+}
+
+document.querySelectorAll('.tabs button').forEach((button) => {
+  button.onclick = () => {
+    document.querySelectorAll('.tabs button').forEach((item) => item.classList.remove('active'));
+    button.classList.add('active');
+    show(button.dataset.view);
+  };
+});
+
+load();
+</script>
+<script src="../javascript/app-i18n.js"></script>
+</body>
+</html>

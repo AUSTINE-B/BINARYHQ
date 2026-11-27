@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CampusNest</title>
+  <style>
+    :root {
+      --ink: #1b1f21;
+      --teal: #0b4f52;
+      --teal-dark: #073d40;
+      --cream: #fff8d8;
+      --line: #edf0f1;
+      --gold: #f59d15;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: #fff;
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 14px;
+    }
+
+    button, input { font: inherit; }
+
+    .topbar {
+      height: 82px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .topbar-inner {
+      width: min(1160px, calc(100% - 64px));
+      height: 100%;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+    }
+
+    .brand {
+      margin-right: 32px;
+      color: var(--teal);
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      height: 100%;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    nav a, .language, .login {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .top-actions {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .language {
+      height: 30px;
+      min-width: 56px;
+      display: grid;
+      place-items: center;
+      border-radius: 5px;
+      background: #f1f3f4;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .login { font-size: 12px; font-weight: 700; }
+
+    .signup, .register {
+      border: 0;
+      border-radius: 6px;
+      color: #fff;
+      background: var(--teal);
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .signup { height: 46px; padding: 0 19px; }
+
+    .hero {
+      min-height: 420px;
+      position: relative;
+      isolation: isolate;
+      display: flex;
+      align-items: center;
+      color: #fff;
+      background:
+        linear-gradient(90deg, rgba(7, 40, 42, 0.82) 0%, rgba(7, 40, 42, 0.58) 46%, rgba(7, 40, 42, 0.10) 78%),
+        url('assets/images/410883166024874484.jpg') center 58% / cover no-repeat;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: auto 0 0;
+      height: 90px;
+      z-index: -1;
+      background: linear-gradient(0deg, rgba(4, 29, 31, 0.32), transparent);
+    }
+
+    .hero-inner {
+      width: min(1160px, calc(100% - 64px));
+      margin: 0 auto;
+      padding: 48px 0 42px;
+    }
+
+    h1 {
+      max-width: 650px;
+      margin: 0 0 14px;
+      font-size: clamp(38px, 5vw, 62px);
+      line-height: 1.02;
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+      text-shadow: 0 3px 24px rgba(0, 0, 0, 0.24);
+    }
+
+    .subtitle {
+      max-width: 610px;
+      margin: 0 0 24px;
+      font-size: 15px;
+      line-height: 1.5;
+      color: #f2f7f6;
+      text-shadow: 0 2px 14px rgba(0, 0, 0, 0.28);
+    }
+
+    .search-row {
+      max-width: 780px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.38);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 18px 42px rgba(4, 29, 31, 0.24);
+      backdrop-filter: blur(10px);
+      padding: 8px;
+    }
+
+    .search-row input {
+      flex: 1;
+      min-width: 0;
+      height: 100%;
+      border: 0;
+      outline: 0;
+      padding: 0 18px;
+      color: var(--ink);
+    }
+
+    .search-row input::placeholder { color: #555; opacity: 1; }
+
+    .search-button {
+      height: 48px;
+      min-width: 112px;
+      border: 0;
+      border-radius: 7px;
+      background: var(--gold);
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(245, 157, 21, 0.22);
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .filter {
+      height: 36px;
+      padding: 0 16px;
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      border-radius: 18px;
+      color: #fff;
+      background: rgba(4, 29, 31, 0.22);
+      backdrop-filter: blur(8px);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .filter.active { background: #fff; color: var(--teal); border-color: #fff; }
+
+    main {
+      width: min(1160px, calc(100% - 64px));
+      margin: 0 auto;
+      padding: 38px 0 38px;
+    }
+
+    section { margin-bottom: 34px; }
+
+    section h2 {
+      margin: 0 0 17px;
+      font-size: 22px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .property-grid, .service-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .property-card {
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid #e8e9ed;
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: 0 8px 24px rgba(27, 31, 33, 0.06);
+    }
+
+    .property-image {
+      height: 178px;
+      margin: 8px 8px 0;
+      display: block;
+      border-radius: 13px;
+      background: #f0f2f3 center / cover no-repeat;
+      overflow: hidden;
+    }
+
+    .property-image img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    .property-info { padding: 10px 14px 13px; }
+    .property-location { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 7px; color: #707579; font-size: 11px; }
+    .property-info h3 { margin: 0 0 9px; font-size: 14px; }
+    .property-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 11px; }
+    .property-tag { padding: 4px 8px; border-radius: 12px; background: #f3f4f5; color: #555b5d; font-size: 10px; }
+    .property-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .price { font-size: 13px; font-weight: 800; }
+    .price span { color: #777d80; font-size: 10px; font-weight: 400; }
+    .view-property {
+      min-height: 34px;
+      padding: 0 14px;
+      border: 0;
+      border-radius: 9px;
+      background: #1d2223;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .property-dialog {
+      width: min(640px, calc(100% - 32px));
+      max-height: calc(100% - 32px);
+      padding: 12px;
+      border: 0;
+      border-radius: 18px;
+      color: var(--ink);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+    }
+    .property-dialog::backdrop { background: rgba(18, 24, 26, 0.62); }
+    .dialog-image { width: 100%; max-height: 55vh; display: block; border-radius: 12px; object-fit: cover; background: #f0f2f3; }
+    .dialog-image[hidden] { display: none; }
+    .gallery-controls { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 10px; }
+    .gallery-controls[hidden], .interior-hint[hidden] { display: none; }
+    .gallery-controls button { min-width: 34px; min-height: 32px; border: 1px solid #e1e4e5; border-radius: 8px; background: #fff; cursor: pointer; }
+    .gallery-status { color: #656c6e; font-size: 12px; }
+    .interior-hint { margin: 10px 0 0; color: #656c6e; font-size: 12px; }
+    .dialog-content { padding: 14px 4px 4px; }
+    .dialog-content h2 { margin: 0 0 6px; font-size: 20px; }
+    .dialog-location, .dialog-description { margin: 0 0 10px; color: #656c6e; font-size: 13px; line-height: 1.5; }
+    .dialog-footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .dialog-actions { display: flex; gap: 8px; }
+    .choose-house { min-height: 36px; padding: 0 14px; border: 0; border-radius: 9px; background: var(--teal); color: #fff; font-weight: 700; cursor: pointer; }
+    .choose-house[hidden] { display: none; }
+    .choice-message { display: none; margin: 10px 0 0; color: #8b2c24; font-size: 12px; }
+    .close-dialog { min-height: 36px; padding: 0 16px; border: 1px solid #e1e4e5; border-radius: 9px; background: #fff; cursor: pointer; }
+
+    .service-card {
+      min-height: 92px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 20px 20px 16px;
+    }
+
+    .service-card h3 { margin: 0 0 9px; font-size: 14px; }
+    .service-card p { max-width: 260px; margin: 0; color: #555b5d; font-size: 12px; line-height: 1.5; }
+
+    .account-banner {
+      min-height: 64px;
+      margin: 4px 0 0;
+      display: flex;
+      align-items: center;
+      border-radius: 8px;
+      background: var(--cream);
+      padding: 10px 20px;
+    }
+
+    .account-copy { display: flex; flex-direction: column; }
+    .account-copy strong { margin-bottom: 4px; font-size: 14px; }
+    .account-copy span { font-size: 11px; }
+    .register { height: 38px; margin-left: auto; padding: 0 16px; }
+
+    footer {
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-top: 1px solid var(--line);
+      color: #777d80;
+      font-size: 11px;
+    }
+
+    @media (max-width: 760px) {
+      .topbar { height: auto; }
+      .topbar-inner { width: calc(100% - 32px); min-height: 68px; }
+      nav { display: none; }
+      .brand { margin-right: 0; }
+      .hero-inner, main { width: calc(100% - 32px); }
+      .hero-inner { padding-top: 34px; }
+      .hero { min-height: 460px; background-position: 62% center; }
+      h1 { max-width: 520px; font-size: 40px; }
+      .search-row { height: 58px; }
+      .search-button { min-width: 82px; }
+      .property-grid, .service-grid { grid-template-columns: 1fr; }
+      .property-image { height: 190px; }
+      .filters { overflow-x: auto; }
+      .filter { white-space: nowrap; }
+    }
+  </style>
+  <style>
+    @media (max-width: 760px) {
+      .topbar { height: auto; }
+      .topbar-inner {
+        height: auto;
+        min-height: 68px;
+        flex-wrap: wrap;
+        padding: 8px 0;
+      }
+      nav {
+        order: 3;
+        display: flex;
+        flex: 0 0 100%;
+        width: 100%;
+        height: auto;
+        gap: 18px;
+        overflow-x: auto;
+        padding: 8px 0;
+        white-space: nowrap;
+      }
+      .top-actions { gap: 10px; }
+      .language { display: none; }
+      .filters { overscroll-behavior-x: contain; }
+      .filter { flex: 0 0 auto; min-height: 40px; }
+      .account-banner { align-items: flex-start; flex-wrap: wrap; gap: 12px; }
+      .register { margin-left: 0; }
+    }
+
+    @media (max-width: 480px) {
+      .topbar-inner,
+      .hero-inner,
+      main { width: calc(100% - 24px); }
+      .top-actions { gap: 8px; }
+      .top-actions .login { font-size: 11px; }
+      .signup { height: 40px; padding: 0 12px; }
+      .hero { min-height: 430px; }
+      h1 { font-size: clamp(34px, 10vw, 40px); }
+      .subtitle { font-size: 14px; }
+      .search-row { height: 54px; padding: 6px; }
+      .search-row input { padding: 0 10px; }
+      .search-button { height: 40px; min-width: 76px; padding: 0 10px; }
+      .view-property { min-height: 40px; }
+      .dialog-footer { align-items: stretch; flex-direction: column; }
+      .dialog-actions { justify-content: flex-end; flex-wrap: wrap; }
+    }
+  </style>
+    <link rel="stylesheet" href="css/app-theme.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><img class="brand-logo" src="assets/images/mouse-solution-logo.jpeg" alt="MOUSE Solution"></div>
+      <nav aria-label="Primary navigation">
+        <a href="pages/rooms.html">Rooms</a>
+        <a href="pages/rooms.html">Map</a>
+        <a href="pages/jobs.html">Student Jobs</a>
+        <a href="pages/services.html">Repairs</a>
+        <a href="pages/services.html">Cleaning</a>
+      </nav>
+      <div class="top-actions">
+        <a class="language" href="pages/translator.html">EN / FR</a>
+        <a class="login" href="pages/login.html">Log in</a>
+        <a class="login" href="pages/dashboard.html">Dashboard</a>
+        <a class="signup" href="pages/signup.html" style="display:grid;place-items:center;text-decoration:none;color:#fff">Sign up</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <h1>Find a student room near your school</h1>
+      <p class="subtitle">Search by institution, city, neighbourhood or keyword. All prices in FCFA.</p>
+      <div class="search-row">
+        <input id="room-search" type="search" placeholder="Hostels near RHIBMS" aria-label="Search for student rooms">
+        <button class="search-button" type="button">Search</button>
+      </div>
+      <div class="filters" aria-label="Room filters">
+        <button class="filter active" type="button">Hostel</button>
+        <button class="filter" type="button">Single room</button>
+        <button class="filter" type="button">Studio</button>
+        <button class="filter" type="button">Apartment</button>
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <section id="rooms">
+      <h2>Recently added</h2>
+      <div class="property-grid">
+        <article class="property-card">
+          <div class="property-image"><img src="assets/images/campusnest-apartment.jpg" alt="Palm Court Hostel"></div>
+          <div class="property-info">
+            <div class="property-location"><span>Molyko, Buea</span></div>
+            <h3>Palm Court Hostel</h3>
+            <div class="property-tags"><span class="property-tag">Hostel</span></div>
+            <div class="property-footer"><div class="price">35 000 FCFA <span>/ month</span></div><button class="view-property" type="button">View</button></div>
+          </div>
+        </article>
+        <article class="property-card">
+          <div class="property-image"><img src="assets/images/campusnest-apartment.jpg" alt="Hilltop Studios"></div>
+          <div class="property-info">
+            <div class="property-location"><span>Bonbuma, Buea</span></div>
+            <h3>Hilltop Studios</h3>
+            <div class="property-tags"><span class="property-tag">Studio</span></div>
+            <div class="property-footer"><div class="price">50 000 FCFA <span>/ month</span></div><button class="view-property" type="button">View</button></div>
+          </div>
+        </article>
+        <article class="property-card">
+          <div class="property-image"><img src="assets/images/campusnest-apartment.jpg" alt="Modern student apartment building"></div>
+          <div class="property-info">
+            <div class="property-location"><span>Mile 17, Buea</span></div>
+            <h3>Green Gate Residence</h3>
+            <div class="property-tags"><span class="property-tag">Apartment</span></div>
+            <div class="property-footer"><div class="price">28 000 FCFA <span>/ month</span></div><button class="view-property" type="button">View</button></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <h2>Student services</h2>
+      <div class="service-grid">
+        <article class="service-card" id="repairs">
+          <h3>Report a repair</h3>
+          <p>Your landlord approves it before a repairer is sent.</p>
+        </article>
+        <article class="service-card" id="cleaning">
+          <h3>Book a cleaning</h3>
+          <p>Pick a date and service type. Approved cleaners only.</p>
+        </article>
+        <article class="service-card" id="jobs">
+          <h3>Find a student job</h3>
+          <p>Filter by location, job type and keyword.</p>
+        </article>
+      </div>
+    </section>
+
+    <div class="account-banner">
+      <div class="account-copy">
+        <strong>Landlord, repairer, cleaner or employer?</strong>
+        <span>Create an account for your role.</span>
+      </div>
+      <a class="register" href="pages/signup.html" style="display:grid;place-items:center;text-decoration:none;color:#fff">Register</a>
+    </div>
+  </main>
+
+  <footer>CampusNest · Cameroon · Help · Privacy · Terms · Report a listing</footer>
+  <dialog class="property-dialog" aria-labelledby="dialog-title">
+    <img class="dialog-image" alt="">
+    <div class="gallery-controls" hidden><button class="gallery-previous" type="button" aria-label="Previous photo">&lt;</button><span class="gallery-status" aria-live="polite"></span><button class="gallery-next" type="button" aria-label="Next photo">&gt;</button></div>
+    <p class="interior-hint" hidden>Interior photos have not been added to this listing yet.</p>
+    <div class="dialog-content">
+      <h2 id="dialog-title"></h2>
+      <p class="dialog-location"></p>
+      <p class="dialog-description"></p>
+      <div class="dialog-footer"><strong class="dialog-price"></strong><div class="dialog-actions"><button class="choose-house" type="button" hidden>Choose this house</button><button class="close-dialog" type="button">Close</button></div></div>
+      <p class="choice-message" role="status"></p>
+    </div>
+  </dialog>
+  <script>
+    const propertyDialog = document.querySelector('.property-dialog');
+    let selectedListing = null;
+    let galleryItems = [];
+    let galleryIndex = 0;
+    let galleryTitle = 'Property';
+    function renderGallery() {
+      const dialogImage = propertyDialog.querySelector('.dialog-image');
+      const galleryControls = propertyDialog.querySelector('.gallery-controls');
+      const galleryStatus = propertyDialog.querySelector('.gallery-status');
+      const interiorHint = propertyDialog.querySelector('.interior-hint');
+      const hasPhoto = galleryItems.length > 0;
+      const currentPhoto = galleryItems[galleryIndex];
+      const interiorCount = galleryItems.filter(photo => photo.kind === 'interior').length;
+      dialogImage.hidden = !hasPhoto;
+      if (hasPhoto) {
+        dialogImage.src = new URL(currentPhoto.url, document.baseURI).href;
+        const viewName = currentPhoto.view || ('View ' + currentPhoto.number);
+        dialogImage.alt = galleryTitle + ' — ' + (currentPhoto.kind === 'cover' ? 'cover and front elevation' : viewName);
+        const position = {front:'50% 48%',aerial:'50% 18%',left:'22% 50%',right:'78% 50%'}[currentPhoto.viewKey] || '50% 50%';
+        dialogImage.style.objectPosition = position;
+      }
+      const canNavigate = galleryItems.length > 1;
+      galleryControls.hidden = !canNavigate && interiorCount === 0;
+      propertyDialog.querySelector('.gallery-previous').hidden = !canNavigate;
+      propertyDialog.querySelector('.gallery-next').hidden = !canNavigate;
+      galleryStatus.textContent = currentPhoto?.kind === 'cover'
+        ? 'Cover and front elevation'
+        : (currentPhoto?.view || ('View ' + (currentPhoto?.number || 1))) + ' · ' + (currentPhoto?.number || 1) + ' of ' + interiorCount;
+      interiorHint.hidden = interiorCount > 0;
+    }
+
+    function showProperty(card, listing) {
+      selectedListing = listing || null;
+      const image = card.querySelector('.property-image img');
+      const title = listing?.title || card.querySelector('h3').textContent;
+      galleryTitle = title;
+      propertyDialog.querySelector('#dialog-title').textContent = title;
+      propertyDialog.querySelector('.dialog-location').textContent = listing
+        ? [listing.neighborhood, listing.city].filter(Boolean).join(', ')
+        : card.querySelector('.property-location').textContent;
+      propertyDialog.querySelector('.dialog-description').textContent = listing?.description || 'View the property photo and contact the listing owner for more information.';
+      propertyDialog.querySelector('.dialog-price').textContent = listing
+        ? Number(listing.price).toLocaleString('en-US') + ' FCFA / month'
+        : card.querySelector('.price').textContent;
+      const coverPhoto = listing?.photo_url || image?.src || '';
+      galleryItems = [
+        ...(coverPhoto ? [{url: coverPhoto, kind: 'cover'}] : []),
+        ...(listing?.interior_photos || []).filter(Boolean).map((photo, index) => {
+          const photoText = String(photo);
+          const cleanUrl = photoText.split('#')[0];
+          const viewKey = photoText.includes('#') ? photoText.split('#')[1] : null;
+          const viewNames = {front:'Front elevation',aerial:'Aerial / top view',left:'Left exterior view',right:'Right exterior view'};
+          return {url: cleanUrl, kind:'interior', number:index+1, view:viewNames[viewKey] || ('House view '+(index+1)), viewKey};
+        })
+      ];
+      galleryIndex = 0;
+      renderGallery();
+      const chooseButton = propertyDialog.querySelector('.choose-house');
+      chooseButton.hidden = !listing?.id;
+      propertyDialog.querySelector('.choice-message').style.display = 'none';
+      propertyDialog.showModal();
+    }
+
+    document.querySelectorAll('.property-card').forEach((card) => {
+      card.querySelector('.view-property').addEventListener('click', () => showProperty(card));
+    });
+    propertyDialog.querySelector('.gallery-previous').addEventListener('click', () => {
+      if (galleryItems.length < 2) return;
+      galleryIndex = (galleryIndex - 1 + galleryItems.length) % galleryItems.length;
+      renderGallery();
+    });
+    propertyDialog.querySelector('.gallery-next').addEventListener('click', () => {
+      if (galleryItems.length < 2) return;
+      galleryIndex = (galleryIndex + 1) % galleryItems.length;
+      renderGallery();
+    });
+    propertyDialog.querySelector('.close-dialog').addEventListener('click', () => propertyDialog.close());
+    propertyDialog.querySelector('.choose-house').addEventListener('click', async () => {
+      if (!selectedListing) return;
+      const message = propertyDialog.querySelector('.choice-message');
+      try {
+        const response = await fetch('php/housing.php', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          body: new URLSearchParams({action: 'choose_house', listing_id: selectedListing.id})
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Unable to select this house.');
+        window.location.href = 'pages/dashboard.html';
+      } catch (error) {
+        message.textContent = error.message;
+        message.style.display = 'block';
+      }
+    });
+    propertyDialog.addEventListener('click', (event) => {
+      if (event.target === propertyDialog) propertyDialog.close();
+    });
+
+    document.querySelector('.search-button').addEventListener('click', () => {
+      const query = document.querySelector('#room-search').value.trim();
+      window.location.href = 'pages/rooms.html' + (query ? '?q=' + encodeURIComponent(query) : '');
+    });
+    document.querySelector('#room-search').addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') document.querySelector('.search-button').click();
+    });
+
+    document.querySelectorAll('.filter').forEach((button) => {
+      button.addEventListener('click', () => {
+        const type = button.textContent.trim();
+        window.location.href = 'pages/rooms.html' + (type === 'Hostel' ? '' : '?type=' + encodeURIComponent(type));
+      });
+    });
+
+    fetch('php/listings.php').then((response) => response.json()).then((data) => {
+      const grid = document.querySelector('.property-grid');
+      if (!data.results?.length) return;
+      grid.replaceChildren();
+      data.results.forEach((listing) => {
+        const card = document.createElement('article');
+        card.className = 'property-card';
+        card.innerHTML = '<div class="property-image"></div><div class="property-info"><div class="property-location"></div><h3></h3><div class="property-tags"></div><div class="property-footer"><div class="price"></div><button class="view-property" type="button">View</button></div></div>';
+        const image = card.querySelector('.property-image');
+        if (listing.photo_url) {
+          const photo = document.createElement('img');
+          photo.src = listing.photo_url;
+          photo.alt = listing.title;
+          image.appendChild(photo);
+        }
+        card.querySelector('h3').textContent = listing.title;
+        card.querySelector('.property-location').textContent = [listing.neighborhood, listing.city].filter(Boolean).join(', ');
+        const tags = card.querySelector('.property-tags');
+        [listing.listing_type, Number(listing.furnished) ? 'Furnished' : ''].filter(Boolean).forEach((label) => {
+          const tag = document.createElement('span');
+          tag.className = 'property-tag';
+          tag.textContent = label;
+          tags.appendChild(tag);
+        });
+        card.querySelector('.price').innerHTML = Number(listing.price).toLocaleString('en-US') + ' FCFA <span>/ month</span>';
+        card.querySelector('.view-property').addEventListener('click', () => showProperty(card, listing));
+        grid.appendChild(card);
+      });
+    }).catch((error) => console.error('Unable to load accommodation listings.', error));
+  </script>
+<script src="javascript/app-i18n.js"></script>
+</body>
+</html>

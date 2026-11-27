@@ -1,0 +1,290 @@
+CampusNest  System Requirements Specification
+Page 1
+ CampusNest
+ Student Accommodation Finder Platform
+ SYSTEM REQUIREMENTS
+ SPECIFICATION
+ Version 1.0 | Cameroon | November 2026
+ A requirements document defining the platform’s functions, users, business rules, security, and
+ acceptance criteria.
+
+
+CampusNest  System Requirements Specification
+Page 2
+1. Introduction
+1.1 Purpose
+CampusNest is a web-based platform designed to help students in Cameroon find suitable accommodation near
+universities and higher institutions. This document defines the functional and non-functional requirements for its
+development.
+1.2 Scope
+The platform connects students with landlords, accommodation providers, approved repairers, cleaners, and
+employers offering student-friendly jobs.
+  Student accommodation search and booking inquiries
+  Location-based accommodation discovery
+  Accommodation listings and landlord management
+  Student repair requests with landlord approval
+  Approved repairer management
+  Cleaning service requests
+  Student job listings and applications
+  User accounts, dashboards, and administration
+ 
+1.3 Intended Users
+  Students
+  Landlords and property managers
+  Accommodation providers
+  Approved repairers
+  Cleaners and cleaning companies
+  Employers
+  Platform administrators
+ 
+1.4 Definitions
+  FCFA: Central African CFA franc, the currency used for prices in Cameroon.
+  Accommodation listing: A property or room advertised for student accommodation.
+  Landlord approval: Permission granted by the property owner or authorized manager before a repair is assigned.
+  Approved repairer: A repair service provider verified and authorized by the platform.
+  Administrator: A user responsible for managing and monitoring the platform.
+ 
+2. Overall Description
+2.1 Product Perspective
+CampusNest shall be a responsive web application accessible through smartphones, tablets, and desktop
+computers. It shall use a centralized database to store user accounts, accommodation listings, service requests,
+job posts, and administrative records.
+2.2 Product Functions
+  Search accommodation by institution, city, neighborhood, price, and type.
+ 
+
+CampusNest  System Requirements Specification
+Page 3
+ View accommodation locations on an interactive map.
+  View property details, photographs, prices, and contact information.
+  Submit accommodation inquiries or booking requests.
+  Report property maintenance problems and track repair status.
+  Request cleaning services.
+  Browse and apply for student jobs.
+  Manage accounts and submitted requests.
+ 
+2.3 Operating Environment
+  Modern web browsers on Android, iOS, desktop, and laptop devices.
+  Internet connections commonly available in Cameroon.
+  Responsive design optimized for mobile devices and lower-bandwidth connections.
+ 
+2.4 Design Constraints
+  All accommodation and service prices shall be displayed in FCFA.
+  The platform shall support locations throughout Cameroon.
+  Users shall be able to search by university or higher institution.
+  The interface shall be simple, attractive, and mobile-friendly.
+  Personal information shall be protected.
+  Information shall not be marked verified unless verification has been completed.
+ 
+3. Functional Requirements
+3.1 User Registration and Authentication
+  FR-01: The system shall allow students to create accounts.
+  FR-02: The system shall allow landlords, repairers, cleaners, and employers to register for appropriate account
+ types.
+ FR-03: The system shall allow users to log in and log out securely.
+  FR-04: The system shall allow users to reset forgotten passwords.
+  FR-05: The system shall restrict account functions according to user roles.
+  FR-06: Administrators shall be able to suspend or deactivate accounts when necessary.
+ 
+3.2 Accommodation Search
+  FR-07: The system shall provide a search bar for accommodation discovery.
+  FR-08: Users shall be able to search using institution names, cities, neighborhoods, or accommodation
+ keywords.
+ FR-09: A search such as “Hostels near RHIBMS” shall display accommodation listings near the specified
+ institution.
+ FR-10: Users shall be able to filter listings by budget, distance, accommodation type, availability, and furnished
+ status.
+ FR-11: The system shall display an appropriate message when no matching accommodation is found.
+  FR-12: Search results shall be sortable by price, distance, and date added.
+ 
+
+CampusNest  System Requirements Specification
+Page 4
+3.3 Accommodation Listings
+  FR-13: Landlords shall be able to create accommodation listings.
+  FR-14: A listing shall include property name, location, price, accommodation type, description, photographs, and
+ availability.
+ FR-15: Listings shall display prices in FCFA.
+  FR-16: Landlords shall be able to edit, update, or remove their listings.
+  FR-17: Administrators shall be able to review, approve, reject, or remove listings.
+  FR-18: The system shall display the listing’s verification status.
+  FR-19: Students shall be able to contact landlords or submit accommodation inquiries.
+ 
+3.4 Interactive Map
+  FR-20: The platform shall display accommodation locations on an interactive map of Cameroon.
+  FR-21: Map markers shall represent accommodation listings.
+  FR-22: Selecting a marker shall display a summary of the accommodation.
+  FR-23: Users shall be able to zoom, pan, and explore locations.
+  FR-24: The system shall support location searches by city, institution, and neighborhood.
+  FR-25: Map locations shall be displayed only when valid geographic coordinates are available.
+ 
+3.5 Repair and Maintenance Requests
+  FR-26: Students shall be able to submit repair requests for their accommodation.
+  FR-27: A request shall include the property, problem description, category, and optional photographs.
+  FR-28: The system shall notify the administrator or maintenance coordinator of a new request.
+  FR-29: The coordinator shall contact the landlord or authorized property manager for approval.
+  FR-30: The system shall record the landlord’s approval or rejection.
+  FR-31: A repairer shall not be assigned before landlord approval has been recorded.
+  FR-32: Only approved and active repairer accounts shall be eligible for assignment.
+  FR-33: After approval, the coordinator shall assign an eligible repairer.
+  FR-34: Students shall be able to view repair request status.
+  FR-35: Repair statuses shall include Submitted, Awaiting landlord approval, Approved, Rejected, Repairer
+ assigned, In progress, Completed, and Cancelled.
+ FR-36: The system shall record the assigned repairer and relevant status changes.
+ 
+3.6 Cleaning Services
+  FR-37: Students shall be able to request cleaning services.
+  FR-38: Cleaning requests shall include location, preferred date, service type, and optional notes.
+  FR-39: Administrators shall be able to manage cleaner accounts.
+  FR-40: Only approved cleaners shall be assigned to cleaning requests.
+  FR-41: Students shall be able to view cleaning request status.
+ 
+3.7 Student Job Listings
+  FR-42: Employers and administrators shall be able to publish student job listings.
+ 
+
+CampusNest  System Requirements Specification
+Page 5
+ FR-43: Job listings shall include title, description, location, requirements, compensation where applicable, and
+ application instructions.
+ FR-44: Students shall be able to search and filter jobs by location, job type, and keywords.
+  FR-45: Students shall be able to apply through the platform or follow the employer’s application instructions.
+  FR-46: Administrators shall be able to review, approve, edit, or remove job listings.
+ 
+3.8 Dashboards
+  FR-47: Student dashboards shall display saved listings, inquiries, repair requests, cleaning requests, and job
+ applications.
+ FR-48: Landlord dashboards shall support property management and viewing inquiries and repair approval
+ requests.
+ FR-49: Repairer dashboards shall display assigned jobs and status.
+  FR-50: Cleaner dashboards shall display assigned cleaning requests.
+  FR-51: Employer dashboards shall support job listing and application management.
+  FR-52: Administrator dashboards shall support management of users, listings, requests, jobs, and platform
+ activity.
+3.9 Notifications
+  FR-53: The system shall notify users when relevant request statuses change.
+  FR-54: Notifications may be delivered through in-platform notifications, email, or SMS, depending on available
+ integrations.
+ FR-55: The system shall record important notifications and delivery status where supported.
+ 
+4. Non-Functional Requirements
+4.1 Performance
+  NFR-01: Main pages should load within 3 seconds under normal network conditions.
+  NFR-02: Search results should be returned within 3 seconds under normal operating conditions.
+  NFR-03: The system shall support multiple simultaneous users.
+  NFR-04: Images shall be optimized to reduce data usage.
+ 
+4.2 Security
+  NFR-05: Passwords shall be securely hashed.
+  NFR-06: The production platform shall use HTTPS.
+  NFR-07: Users shall only access information and functions permitted by their roles.
+  NFR-08: Administrative actions and repair approval decisions shall be recorded.
+  NFR-09: User input shall be validated to reduce common security risks.
+  NFR-10: Private user information shall not be publicly displayed without authorization.
+ 
+4.3 Reliability and Availability
+  NFR-11: The production platform should target at least 99% monthly availability, excluding scheduled
+ maintenance.
+ NFR-12: The system shall maintain regular database backups.
+  NFR-13: The system shall provide clear error messages when an operation fails.
+ 
+
+CampusNest  System Requirements Specification
+Page 6
+ NFR-14: The system shall prevent duplicate or unauthorized repair assignments.
+ 
+4.4 Usability and Accessibility
+  NFR-15: The interface shall be easy to use for students with basic digital skills.
+  NFR-16: The platform shall be responsive on mobile, tablet, and desktop screens.
+  NFR-17: The system shall use readable fonts, clear buttons, and consistent navigation.
+  NFR-18: Important actions shall provide confirmation or feedback.
+ 
+4.5 Localization
+  NFR-19: The default currency shall be FCFA.
+  NFR-20: The platform shall support Cameroon regions, cities, neighborhoods, and institutions.
+  NFR-21: The initial interface shall be available in English, with French support planned or included in localization.
+ 
+5. Data Requirements
+The system shall store and manage the following data:
+  User accounts and roles
+  Student profiles
+  Landlord and property manager profiles
+  Accommodation listings and photographs
+  Institution and location records
+  Geographic coordinates
+  Accommodation inquiries and booking requests
+  Repair requests and landlord approval records
+  Repairer profiles and assignments
+  Cleaner profiles and cleaning requests
+  Job listings and applications
+  Notifications and administrative activity logs
+ The database shall maintain relationships between users, properties, requests, and service providers.
+6. Business Rules
+  BR-01: Accommodation prices shall be displayed in FCFA.
+  BR-02: A repair request must be linked to a property or valid accommodation location.
+  BR-03: Landlord approval is mandatory before a repairer can be assigned.
+  BR-04: Only approved repairers may receive repair assignments.
+  BR-05: Only approved cleaners may receive cleaning assignments.
+  BR-06: Listings shall not be marked verified until verification is complete.
+  BR-07: Administrators shall be able to remove fraudulent, misleading, or inappropriate listings.
+  BR-08: The platform shall maintain a record of repair approval and assignment decisions.
+ 
+
+CampusNest  System Requirements Specification
+Page 7
+7. External Interfaces
+7.1 User Interface
+  Home page
+  Accommodation search and details pages
+  Interactive map
+  Student and landlord dashboards
+  Repair request page
+  Cleaning request page
+  Student jobs page
+  Service provider dashboard
+  Administrator dashboard
+ 
+7.2 Map Interface
+The platform shall integrate a mapping service capable of displaying geographic locations across Cameroon.
+7.3 Notification Interface
+The platform may integrate email, SMS, or other notification services.
+7.4 Payment Interface
+If online booking or deposits are introduced, the platform may integrate supported payment providers used in
+Cameroon. Payment processing is outside the initial scope unless separately approved.
+8. Acceptance Criteria
+  Students can register and log in.
+  Students can search accommodation by institution and location.
+  Searching “Hostels near RHIBMS” returns relevant listings near RHIBMS.
+  Accommodation prices are displayed in FCFA.
+  Accommodation listings appear on the map when valid coordinates exist.
+  Landlords can create and manage property listings.
+  Students can submit repair requests.
+  Repair requests cannot be assigned until landlord approval is recorded.
+  Only approved repairers can be assigned.
+  Students can submit cleaning requests.
+  Students can browse and apply for jobs.
+  Administrators can manage users, listings, jobs, and service requests.
+  The platform works on common mobile and desktop browsers.
+  User data and role permissions are protected.
+ 
+9. Future Enhancements
+  Online accommodation booking and deposits
+ 
+
+CampusNest  System Requirements Specification
+Page 8
+ Mobile application
+  Student reviews and ratings
+  Verified landlord badges
+  In-app messaging
+  Advanced route and distance calculations
+  French-language interface
+  Payment integration
+  Automated fraud detection
+  University partnerships
+ 
+10. Conclusion
+CampusNest shall provide a centralized accommodation and student services platform for Cameroon. It will help
+students discover accommodation, connect with landlords, request approved maintenance services, access
+cleaning services, and find student employment opportunities. The platform shall prioritize usability, security,
+reliable information, location-based search, and a clear landlord approval process for repairs.

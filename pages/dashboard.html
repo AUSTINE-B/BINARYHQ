@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dashboard - CampusNest</title>
+<style>
+:root{--navy:#174f8a;--blue:#245fb3;--ink:#17212b;--muted:#74808a;--line:#e5eaef;--canvas:#f4f7fa;--green:#147d54;--red:#a33232}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--canvas)}button,input,select,textarea{font:inherit}button,a{cursor:pointer}
+.dashboard-shell{min-height:100vh;display:grid;grid-template-columns:230px minmax(0,1fr)}.sidebar{position:sticky;top:0;height:100vh;padding:28px 16px 20px;background:linear-gradient(180deg,#1a568e 0%,#174d83 82%,#123f70 100%);color:#fff;display:flex;flex-direction:column}.brand{color:#fff;font-size:19px;font-weight:850;text-decoration:none;margin:0 12px 26px}.nav{display:flex;flex-direction:column;gap:6px}.nav button{min-height:44px;border:0;border-radius:8px;background:transparent;color:#d9e8f6;text-align:left;padding:0 14px;font-size:13px;font-weight:700}.nav button:hover,.nav button.active{background:rgba(255,255,255,.16);color:#fff}.sidebar-footer{margin-top:auto}.logout{display:block;height:44px;color:#d9e8f6;text-decoration:none;font-size:13px;font-weight:700;padding:14px}
+.workspace{min-width:0}.topbar{min-height:74px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 34px;gap:12px}.topbar h1{margin:0;font-size:21px}.top-actions{margin-left:auto;display:flex;align-items:center;gap:10px}.top-link,.notification-button{min-height:38px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);padding:0 12px;text-decoration:none;font-size:12px;font-weight:700}.notification-button{position:relative}.notification-count{margin-left:5px;color:var(--blue)}.profile{height:38px;border-radius:19px;background:#edf3f8;padding:0 12px;display:flex;align-items:center;font-size:12px;font-weight:800}
+.content{padding:28px 34px 40px}.alert{display:none;margin:0 0 16px;padding:12px 14px;border:1px solid #cfe8dc;border-radius:9px;background:#effaf4;color:#17633f;font-size:13px}.alert.error{border-color:#f0d0cc;background:#fff3f1;color:#8b2c24}.welcome{margin:0 0 18px;font-size:16px}.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:18px}.card,.panel-box,.action-card{border:1px solid var(--line);border-radius:13px;background:#fff;box-shadow:0 5px 18px rgba(23,33,43,.035)}.card{min-height:112px;padding:18px}.card strong{display:block;font-size:24px;margin:8px 0 4px}.card span{color:var(--muted);font-size:12px}.panel-box{padding:18px;margin-bottom:16px}.panel-box h2{margin:0 0 14px;font-size:16px}.action-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.action-card{min-height:88px;padding:15px;color:var(--ink);text-decoration:none;font-size:13px;font-weight:800;display:flex;align-items:center;gap:12px}.action-card:hover{border-color:#b9cee4}.action-icon{width:34px;height:34px;flex:none;border-radius:9px;background:#eaf2fb;color:var(--blue);display:grid;place-items:center}
+.row{border-bottom:1px solid var(--line);padding:12px 0;display:flex;align-items:flex-start;justify-content:space-between;gap:14px}.row:last-child{border-bottom:0}.row-main{min-width:0}.row-main strong{display:block;margin-bottom:5px;font-size:13px}.muted{color:var(--muted);font-size:12px;line-height:1.5}.badge{display:inline-block;margin:2px 6px 2px 0;padding:4px 8px;border-radius:12px;background:#edf3f8;color:#37536d;font-size:10px;font-weight:700}.status-pending{color:#8a5a00}.status-paid,.status-approved{color:var(--green)}.status-rejected{color:var(--red)}
+.button,.button-secondary,.button-danger{min-height:35px;border:0;border-radius:8px;padding:0 12px;font-size:12px;font-weight:800}.button{background:var(--blue);color:#fff}.button-secondary{background:#edf3f8;color:#234e78}.button-danger{background:#fff0ee;color:#8b2c24}.button:disabled{opacity:.55;cursor:not-allowed}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.field{display:flex;flex-direction:column;gap:5px}.field.full{grid-column:1/-1}.field label{font-size:11px;font-weight:700;color:#4f5c66}.field input,.field select,.field textarea{width:100%;min-height:39px;border:1px solid #d5dde3;border-radius:7px;padding:8px 10px;background:#fff}.field textarea{min-height:76px;resize:vertical}.form-actions{grid-column:1/-1;display:flex;justify-content:flex-end}.table-wrap{overflow-x:auto}.table{width:100%;border-collapse:collapse;min-width:620px}.table th,.table td{padding:11px 9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;font-size:12px}.table th{color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.04em}.table td .button,.table td .button-secondary,.table td .button-danger{margin:2px 3px 2px 0}.house-image{width:min(100%,520px);max-height:300px;object-fit:cover;border-radius:12px;margin:0 0 14px}.message-list{max-height:330px;overflow:auto;margin:0 0 12px}.message-bubble{max-width:85%;margin:8px 0;padding:10px 12px;border-radius:12px;background:#eef3f8;font-size:12px;line-height:1.5}.message-bubble.mine{margin-left:auto;background:#e7f5ee}.message-bubble strong{display:block;margin-bottom:3px;font-size:11px}.empty{padding:18px 0;color:var(--muted);font-size:13px}.inline-form{display:inline-flex;align-items:center;gap:5px;flex-wrap:wrap}.inline-form input{width:105px;min-height:34px;border:1px solid #d5dde3;border-radius:7px;padding:5px 8px}
+@media(max-width:900px){.dashboard-shell{grid-template-columns:76px minmax(0,1fr)}.sidebar{padding-inline:10px}.brand{font-size:0;margin-inline:12px}.brand::first-letter{font-size:19px}.nav button{font-size:0;text-align:center;padding:0}.nav button::first-letter{font-size:13px}.logout{font-size:0;text-align:center}.topbar{padding:0 18px}.content{padding:22px 18px}.cards{grid-template-columns:1fr}.action-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.dashboard-shell{grid-template-columns:1fr}.sidebar{position:relative;height:auto;padding:12px 10px;display:block}.brand{display:block;font-size:17px;margin:0 8px 10px}.nav{flex-direction:row;overflow-x:auto}.nav button{min-width:48px;min-height:42px;font-size:0}.nav button::first-letter{font-size:13px}.sidebar-footer{display:none}.topbar{min-height:62px;padding:0 12px}.topbar h1{font-size:17px}.profile{display:none}.content{padding:16px 12px}.action-grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.field.full,.form-actions{grid-column:auto}.row{flex-direction:column}.table{min-width:560px}}
+</style>
+<style>
+@media(max-width:900px){
+  .dashboard-shell{grid-template-columns:minmax(0,1fr)}
+  .sidebar{position:relative;top:auto;height:auto;min-width:0;padding:12px 16px;display:flex;flex-direction:column}
+  .brand{font-size:17px;margin:0 8px 8px}
+  .nav{min-width:0;flex-direction:row;gap:6px;overflow-x:auto;padding:0 0 4px;overscroll-behavior-x:contain}
+  .nav button{flex:0 0 auto;min-width:max-content;min-height:44px;padding:0 12px;font-size:12px;text-align:center;white-space:nowrap}
+  .sidebar-footer{display:flex;margin-top:0;justify-content:flex-end}
+  .logout{height:auto;min-height:44px;padding:8px 14px}
+}
+@media(max-width:560px){
+  .sidebar{display:flex;padding:10px 12px}
+  .brand{display:block;font-size:17px;margin:0 8px 8px}
+  .nav{flex-direction:row;overflow-x:auto}
+  .nav button{min-width:max-content;min-height:44px;font-size:12px}
+  .sidebar-footer{display:flex}
+  .topbar{flex-wrap:wrap;gap:8px;padding:10px 12px}
+  .topbar h1{font-size:17px}
+  .top-actions{flex-wrap:wrap;gap:6px;margin-left:auto}
+  .top-link,.notification-button{min-height:42px;padding:0 9px;font-size:11px}
+  .content{padding:16px 12px 28px}
+}
+.house-gallery{max-width:520px;margin-bottom:14px}.house-gallery-main{width:100%;height:300px;object-fit:cover;border-radius:12px}.house-gallery-thumbs{display:flex;gap:8px;margin-top:8px;overflow-x:auto}.house-gallery-thumbs button{flex:0 0 78px;height:58px;border:2px solid transparent;border-radius:8px;padding:0;overflow:hidden;background:#eef3f6;cursor:pointer}.house-gallery-thumbs button.active{border-color:var(--blue)}.house-gallery-thumbs img{width:100%;height:100%;object-fit:cover}
+</style>
+<link rel="stylesheet" href="../css/app-theme.css">
+</head>
+<body>
+<div class="dashboard-shell">
+  <aside class="sidebar">
+    <a class="brand" href="../index.html"><img class="brand-logo" src="../assets/images/mouse-solution-logo.jpeg" alt="MOUSE Solution"></a>
+    <nav class="nav" id="role-navigation" aria-label="Dashboard navigation"></nav>
+    <div class="sidebar-footer"><a class="logout" href="../php/logout.php">Log out</a></div>
+  </aside>
+  <section class="workspace">
+    <header class="topbar">
+      <h1 id="page-title">My dashboard</h1>
+      <div class="top-actions">
+        <a class="top-link" href="../index.html">Home</a>
+        <button class="notification-button" id="notifications-button" type="button">Notifications<span class="notification-count" id="notification-count"></span></button>
+        <div class="profile" id="profile-name">My account</div>
+      </div>
+    </header>
+    <main class="content">
+      <div class="alert" id="dashboard-alert" role="status"></div>
+      <div id="dashboard-view"><p class="welcome">Loading your dashboard...</p></div>
+    </main>
+  </section>
+</div>
+<script>
+const rolePages = {
+  student: {
+    title: 'Tenant dashboard',
+    pages: [['Overview','overview'],['View houses','houses'],['My house','house'],['Services','services'],['Repair requests','repairs'],['Payments','payments'],['Message admin','messages'],['Rate house','reviews'],['Applications','applications'],['Notifications','notifications']]
+  },
+  landlord: {
+    title: 'Landlord dashboard',
+    pages: [['Overview','overview'],['My houses','properties'],['Tenants','tenants'],['Collect rent','payments'],['Repair approvals','repairs'],['Notifications','notifications']]
+  },
+  admin: {
+    title: 'Administration',
+    pages: [['Overview','overview'],['Landlords & tenants','users'],['Manage houses','listings'],['Manage services','services'],['Payments','payments'],['Message tenants','messages'],['Jobs','jobs'],['Repairs','repairs'],['Activity log','activity'],['Notifications','notifications']]
+  },
+  repairer: {title:'Repairer dashboard',pages:[['Overview','overview'],['Assigned jobs','assigned'],['Services','services'],['Notifications','notifications']]},
+  cleaner: {title:'Cleaner dashboard',pages:[['Overview','overview'],['Assigned cleaning','assigned'],['Services','services'],['Notifications','notifications']]},
+  employer: {title:'Employer dashboard',pages:[['Overview','overview'],['My job posts','jobs'],['Applications','applications'],['Notifications','notifications']]}
+};
+let dashboardData;
+let housingData;
+let adminData;
+let applicationData = [];
+let currentRole;
+let currentPage = 'overview';
+let selectedMessages = [];
+let selectedTenancyId = null;
+const dashboardView = document.querySelector('#dashboard-view');
+const alertBox = document.querySelector('#dashboard-alert');
+
+function escapeHTML(value) {
+  return String(value ?? '').replace(/[&<>"']/g, character => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  })[character]);
+}
+
+function displayDate(value) {
+  if (!value) return '';
+  const date = new Date(String(value).replace(' ', 'T'));
+  return Number.isNaN(date.getTime()) ? escapeHTML(value) : date.toLocaleString();
+}
+
+function resolveHousingPhoto(path) {
+  return /^(https?:)?\/\//i.test(path) || path.startsWith('/') ? path : '../' + path;
+}
+
+function showNotice(message, isError = false) {
+  alertBox.textContent = message;
+  alertBox.classList.toggle('error', isError);
+  alertBox.style.display = 'block';
+}
+
+async function requestJSON(url, options = {}) {
+  const response = await fetch(url, {credentials:'same-origin', ...options});
+  let data;
+  try {
+    data = await response.json();
+  } catch {
+    throw new Error('The server returned an invalid response.');
+  }
+  if (!response.ok) throw new Error(data.error || 'The request could not be completed.');
+  return data;
+}
+
+function endpointFor(form) {
+  return form.dataset.endpoint === 'admin'
+    ? '../php/admin.php'
+    : form.dataset.endpoint === 'listings'
+      ? '../php/listings.php'
+      : form.dataset.endpoint === 'services'
+        ? '../php/services.php'
+        : form.dataset.endpoint === 'jobs'
+          ? '../php/jobs.php'
+          : '../php/housing.php';
+}
+
+async function refreshData() {
+  dashboardData = await requestJSON('../php/dashboard.php');
+  currentRole = dashboardData.role;
+  if (!rolePages[currentRole]) throw new Error('This account has no configured dashboard.');
+  housingData = await requestJSON('../php/housing.php?action=overview');
+  adminData = currentRole === 'admin' ? await requestJSON('../php/admin.php') : null;
+  document.querySelector('#page-title').textContent = rolePages[currentRole].title;
+  document.querySelector('#profile-name').textContent = dashboardData.name || 'My account';
+  document.querySelector('#notification-count').textContent = dashboardData.counts?.notifications ? ' ' + dashboardData.counts.notifications : '';
+  const nav = document.querySelector('#role-navigation');
+  nav.innerHTML = rolePages[currentRole].pages.map(([label, key], index) =>
+    `<button type="button" class="${key === currentPage ? 'active' : ''}" data-page="${key}" aria-label="${escapeHTML(label)}">${escapeHTML(label)}</button>`
+  ).join('');
+  nav.querySelectorAll('button').forEach(button => button.addEventListener('click', () => openPage(button.dataset.page)));
+}
+
+function actionCard(label, page, icon) {
+  if (page.startsWith('../')) return `<a class="action-card" href="${page}"><span class="action-icon">${icon}</span>${escapeHTML(label)}</a>`;
+  return `<button class="action-card" type="button" data-open-page="${page}"><span class="action-icon">${icon}</span>${escapeHTML(label)}</button>`;
+}
+
+function renderOverview() {
+  const counts = dashboardData.counts || {};
+  const metrics = currentRole === 'student'
+    ? [['Current house', counts.current_house ? 'Selected' : 'Not selected'],['Pending payments', counts.pending_payments || 0],['Unread updates', counts.notifications || 0]]
+    : currentRole === 'landlord'
+      ? [['Houses', counts.properties || 0],['Current tenants', counts.tenants || 0],['Payments to confirm', counts.pending_payments || 0]]
+      : currentRole === 'admin'
+        ? [['Accounts', counts.users || 0],['Houses', counts.listings || 0],['Payments', counts.payments || 0]]
+        : [['Assigned work', counts.assigned || counts.jobs || 0],['Unread updates', counts.notifications || 0],['Role', currentRole]];
+  let actions = [];
+  if (currentRole === 'student') actions = [['Browse houses','houses','H'],['Current house','house','H'],['Pay rent or bills','payments','$'],['Contact admin','messages','M'],['Call a service','services','C']];
+  if (currentRole === 'student') actions.push(['Browse jobs','../pages/jobs.html','J'],['Request repair','../pages/services.html#repair','+'],['Book cleaning','../pages/services.html#cleaning','+'],['Applications','applications','A']);
+  if (currentRole === 'landlord') actions = [['Manage houses','properties','H'],['View tenants','tenants','T'],['Confirm rent','payments','$'],['Review repairs','repairs','R']];
+  if (currentRole === 'admin') actions = [['Manage houses','listings','H'],['Manage accounts','users','U'],['Add services','services','+'],['Message tenants','messages','M'],['Manage jobs','jobs','J'],['Review activity','activity','A']];
+  if (currentRole === 'employer') actions = [['Post a job','jobs','+'],['Review applications','applications','A']];
+  if (currentRole === 'repairer') actions = [['View assigned jobs','assigned','+'],['Open service requests','../pages/services.html','S']];
+  if (currentRole === 'cleaner') actions = [['View assigned cleaning','assigned','+'],['Open service requests','../pages/services.html','S']];
+  const recent = currentRole === 'student' ? housingData.notifications.slice(0,4)
+    : currentRole === 'landlord' ? housingData.notifications.slice(0,4)
+      : currentRole === 'admin' ? adminData.activity.slice(0,5) : [];
+  dashboardView.innerHTML = `
+    <p class="welcome">Welcome back, ${escapeHTML(dashboardData.name)}. Here is your CampusNest activity.</p>
+    <div class="cards">${metrics.map(([label,value]) => `<article class="card"><span>${escapeHTML(label)}</span><strong>${escapeHTML(value)}</strong></article>`).join('')}</div>
+    <section class="panel-box"><h2>Quick actions</h2><div class="action-grid">${actions.map(action => actionCard(...action)).join('')}</div></section>
+    <section class="panel-box"><h2>Recent updates</h2>${recent.length ? recent.map(item => `<div class="row"><div class="row-main"><strong>${escapeHTML(item.message || item.action || item.title || 'CampusNest update')}</strong><div class="muted">${escapeHTML(item.actor_name || item.details || item.status || '')} ${item.created_at ? '· ' + displayDate(item.created_at) : ''}</div></div></div>`).join('') : '<p class="empty">You are all caught up.</p>'}</section>`;
+}
+
+function renderHouses() {
+  dashboardView.innerHTML = `<section class="panel-box"><h2>Find your next home</h2><p class="muted">Browse approved accommodation and select an available house to make it your current home.</p><a class="button" href="rooms.html" style="display:inline-flex;align-items:center;padding:0 14px;text-decoration:none">View available houses</a></section>
+    ${housingData.tenancy ? '<section class="panel-box"><strong>You already have a current house.</strong><p class="muted">Contact the admin if you need to change your selection.</p></section>' : ''}`;
+}
+
+function renderCurrentHouse() {
+  const house = housingData.tenancy;
+  if (!house) {
+    dashboardView.innerHTML = `<section class="panel-box"><h2>Your current house</h2><p class="empty">No house selected yet.</p><button class="button" data-open-page="houses">Browse houses</button></section>`;
+    return;
+  }
+  const photos = (house.interior_photos || []).filter(Boolean);
+  const galleryPhotos = photos.length ? photos : [house.photo_url || 'assets/images/house-elevation.jpg'];
+  const viewNames = {front:'Front elevation',aerial:'Aerial / top view',left:'Left exterior view',right:'Right exterior view'};
+  const gallery = `<div class="house-gallery"><img class="house-gallery-main" src="${escapeHTML(resolveHousingPhoto(galleryPhotos[0].split('#')[0]))}" alt="${escapeHTML(house.title)} — house view"><div class="house-gallery-thumbs">${galleryPhotos.map((photo,index)=>{
+    const text=String(photo);
+    const clean=text.split('#')[0];
+    const key=text.includes('#')?text.split('#')[1]:null;
+    return `<button type="button" class="${index===0?'active':''}" data-house-photo="${escapeHTML(clean)}" data-house-view="${escapeHTML(key||'')}" title="${escapeHTML(viewNames[key]||('House view '+(index+1))) }"><img src="${escapeHTML(resolveHousingPhoto(clean))}" alt="${escapeHTML(viewNames[key]||('House view '+(index+1))) }"></button>`;
+  }).join('')}</div></div>`;
+  dashboardView.innerHTML = `<section class="panel-box"><h2>Your current house</h2>${gallery}<h3>${escapeHTML(house.title)}</h3><p class="muted">${escapeHTML([house.neighborhood,house.city].filter(Boolean).join(', '))} · ${escapeHTML(house.listing_type)}</p><p><strong>${Number(house.rent_amount).toLocaleString()} FCFA / month</strong></p><p class="muted">Landlord: ${escapeHTML(house.landlord_name)}${house.landlord_phone ? ' · ' + escapeHTML(house.landlord_phone) : ''}</p><div class="action-grid"><button class="action-card" data-open-page="messages" type="button">Message admin</button><button class="action-card" data-open-page="payments" type="button">Pay rent or bills</button><button class="action-card" data-open-page="reviews" type="button">Rate this house</button></div></section>`;
+  dashboardView.querySelectorAll('[data-house-photo]').forEach(button => button.addEventListener('click', () => {
+    const main = dashboardView.querySelector('.house-gallery-main');
+    main.src = resolveHousingPhoto(button.dataset.housePhoto);
+    main.style.objectPosition = {front:'50% 48%',aerial:'50% 18%',left:'22% 50%',right:'78% 50%'}[button.dataset.houseView] || '50% 50%';
+    dashboardView.querySelectorAll('[data-house-photo]').forEach(item => item.classList.remove('active'));
+    button.classList.add('active');
+  }));
+}
+
+function renderServices() {
+  const services = currentRole === 'admin' ? adminData.services || [] : housingData.services || [];
+  dashboardView.innerHTML = `<section class="panel-box"><h2>${currentRole === 'admin' ? 'Platform services' : 'Services you can call'}</h2>${currentRole === 'admin' ? `<form class="form-grid" data-endpoint="admin"><input type="hidden" name="action" value="add_service"><div class="field"><label>Service name</label><input name="name" required></div><div class="field"><label>Phone</label><input name="phone" type="tel"></div><div class="field full"><label>Description</label><textarea name="description"></textarea></div><div class="form-actions"><button class="button" type="submit">Add service</button></div></form>` : ''}${services.length ? services.map(service => `<div class="row"><div class="row-main"><strong>${escapeHTML(service.name)}</strong><div class="muted">${escapeHTML(service.description || '')}</div></div>${currentRole === 'admin' ? Number(service.active) ? `<form data-endpoint="admin"><input type="hidden" name="action" value="deactivate_service"><input type="hidden" name="id" value="${Number(service.id)}"><button class="button-danger" type="submit">Remove</button></form>` : '<span class="badge">Inactive</span>' : service.phone ? `<a class="button" href="tel:${escapeHTML(service.phone.replace(/[^+\d]/g,''))}" style="display:grid;place-items:center;text-decoration:none">Call</a>` : '<span class="badge">Contact admin for details</span>'}</div>`).join('') : '<p class="empty">No services have been added yet.</p>'}</section>${currentRole === 'student' ? `<section class="panel-box"><h2>ASTRA home services</h2><p class="muted">Browse TechConnect’s service catalog and place or track bookings in ASTRA. ASTRA requires a separate account.</p><a class="button" href="../pages/services.html#astra-services" style="display:inline-flex;align-items:center;padding:0 12px;text-decoration:none">Browse ASTRA services</a></section>` : ''}`;
+}
+
+function paymentRows(payments, canCollect) {
+  if (!payments.length) return '<p class="empty">No payment records yet.</p>';
+  return `<div class="table-wrap"><table class="table"><thead><tr><th>House / type</th><th>Tenant</th><th>Amount</th><th>Month</th><th>Status</th>${canCollect ? '<th>Action</th>' : ''}</tr></thead><tbody>${payments.map(payment => `<tr><td>${escapeHTML(payment.house_title || payment.payment_type)}<br><span class="muted">${escapeHTML(payment.payment_type)}</span></td><td>${escapeHTML(payment.tenant_name || 'You')}</td><td>${Number(payment.amount).toLocaleString()} FCFA</td><td>${escapeHTML(payment.period)}</td><td class="status-${escapeHTML(payment.status)}">${escapeHTML(payment.status)}</td>${canCollect ? `<td>${payment.status === 'pending' ? `<form class="inline-form" data-endpoint="housing"><input type="hidden" name="action" value="collect_payment"><input type="hidden" name="payment_id" value="${Number(payment.id)}"><button class="button" name="decision" value="paid" type="submit">Confirm</button><button class="button-danger" name="decision" value="rejected" type="submit">Reject</button></form>` : ''}</td>` : ''}</tr>`).join('')}</tbody></table></div>`;
+}
+
+function renderPayments() {
+  const isTenant = currentRole === 'student';
+  const payments = currentRole === 'admin' ? adminData.payments || [] : housingData.payments || [];
+  const tenants = currentRole === 'admin' ? adminData.tenants || [] : housingData.tenants || [];
+  const form = isTenant && housingData.tenancy ? `<section class="panel-box"><h2>Record a rent or bill payment</h2><p class="muted">Submitting a payment records it as pending. Your landlord or admin must confirm receipt; this page does not process a bank or mobile-money transfer.</p><form class="form-grid" data-endpoint="housing"><input type="hidden" name="action" value="submit_payment"><div class="field"><label>Payment type</label><select name="payment_type" required><option value="rent">Rent</option><option value="electricity">Electricity</option><option value="water">Water</option></select></div><div class="field"><label>Amount (FCFA)</label><input name="amount" type="number" min="1" value="${Number(housingData.tenancy.rent_amount)}" required></div><div class="field"><label>Month</label><input name="period" type="month" value="${new Date().toISOString().slice(0,7)}" required></div><div class="form-actions"><button class="button" type="submit">Submit payment record</button></div></form></section>` : '';
+  const recordForm = (currentRole === 'landlord' || currentRole === 'admin') && tenants.length ? `<section class="panel-box"><h2>Record rent or bill collected</h2><form class="form-grid" data-endpoint="housing"><input type="hidden" name="action" value="record_payment"><div class="field full"><label>Tenant and house</label><select name="tenancy_id" required>${tenants.map(tenant => `<option value="${Number(tenant.tenancy_id)}">${escapeHTML(tenant.tenant_name)} · ${escapeHTML(tenant.house_title)}</option>`).join('')}</select></div><div class="field"><label>Payment type</label><select name="payment_type" required><option value="rent">Rent</option><option value="electricity">Electricity</option><option value="water">Water</option></select></div><div class="field"><label>Amount (FCFA)</label><input name="amount" type="number" min="1" required></div><div class="field"><label>Month</label><input name="period" type="month" value="${new Date().toISOString().slice(0,7)}" required></div><div class="form-actions"><button class="button" type="submit">Record collected payment</button></div></form></section>` : '';
+  const rentEditor = currentRole === 'landlord' ? '<p class="muted">Update an active tenant\'s rent from the Tenants page.</p>' : '';
+  dashboardView.innerHTML = `${form}${recordForm}<section class="panel-box"><h2>${isTenant ? 'Your payment history' : currentRole === 'admin' ? 'All house payments' : 'Tenant payments'}</h2>${rentEditor}${paymentRows(payments, currentRole === 'landlord' || currentRole === 'admin')}</section>`;
+}
+
+function renderTenants() {
+  const tenants = housingData.tenants || [];
+  dashboardView.innerHTML = `<section class="panel-box"><h2>Current tenants</h2>${tenants.length ? `<div class="table-wrap"><table class="table"><thead><tr><th>Tenant</th><th>House</th><th>Current rent</th><th>Started</th><th>Update rent</th><th>Tenancy</th></tr></thead><tbody>${tenants.map(tenant => `<tr><td>${escapeHTML(tenant.tenant_name)}<br><span class="muted">${escapeHTML(tenant.email)} ${tenant.phone ? '· ' + escapeHTML(tenant.phone) : ''}</span></td><td>${escapeHTML(tenant.house_title)}<br><span class="muted">${escapeHTML(tenant.city)}</span></td><td>${Number(tenant.rent_amount).toLocaleString()} FCFA</td><td>${displayDate(tenant.started_at)}</td><td><form class="inline-form" data-endpoint="housing"><input type="hidden" name="action" value="update_rent"><input type="hidden" name="tenancy_id" value="${Number(tenant.tenancy_id)}"><input type="number" min="1" name="amount" value="${Number(tenant.rent_amount)}" required aria-label="New monthly rent"><button class="button" type="submit">Save</button></form></td><td><button class="button-danger" type="button" data-housing-action="end_tenancy" data-tenancy-id="${Number(tenant.tenancy_id)}">End tenancy</button></td></tr>`).join('')}</tbody></table></div>` : '<p class="empty">No active tenants yet.</p>'}</section>`;
+}
+
+function renderRepairs() {
+  const repairs = currentRole === 'admin' ? adminData.repairs || [] : housingData.repairs || [];
+  if (!repairs.length) {
+    dashboardView.innerHTML = '<section class="panel-box"><h2>Repair requests</h2><p class="empty">No repair requests yet.</p></section>';
+    return;
+  }
+  const canReview = currentRole === 'admin' || currentRole === 'landlord';
+  dashboardView.innerHTML = `<section class="panel-box"><h2>${currentRole === 'student' ? 'Your repair requests' : 'Repair requests'}</h2><div class="table-wrap"><table class="table"><thead><tr><th>House</th><th>${currentRole === 'landlord' || currentRole === 'admin' ? 'Tenant / category' : 'Category'}</th><th>Details</th><th>Status</th>${canReview ? '<th>Decision</th>' : ''}</tr></thead><tbody>${repairs.map(repair => `<tr><td>${escapeHTML(repair.house_title || repair.title || '')}</td><td>${escapeHTML(repair.tenant_name || repair.category || '')}</td><td>${escapeHTML(repair.description || '')}</td><td>${escapeHTML(repair.status)}</td>${canReview ? `<td>${repair.status === 'Submitted' ? `<form class="inline-form" data-endpoint="services"><input type="hidden" name="action" value="repair_decision"><input type="hidden" name="repair_id" value="${Number(repair.id)}"><button class="button" type="submit" name="decision" value="approved">Approve</button><button class="button-danger" type="submit" name="decision" value="rejected">Reject</button></form>` : ''}</td>` : ''}</tr>`).join('')}</tbody></table></div></section>`;
+}
+
+function renderAssigned() {
+  const rows = currentRole === 'cleaner' ? housingData.cleaning_requests || [] : housingData.repairs || [];
+  const label = currentRole === 'cleaner' ? 'Assigned cleaning requests' : 'Assigned repair jobs';
+  dashboardView.innerHTML = `<section class="panel-box"><h2>${label}</h2>${rows.length ? rows.map(item => `<div class="row"><div class="row-main"><strong>${escapeHTML(item.house_title || item.location || 'Service request')}</strong><div class="muted">${escapeHTML(item.category || item.service_type || '')} · ${escapeHTML(item.preferred_date || item.status || '')}</div><div class="muted">${escapeHTML(item.description || item.notes || '')}</div></div><span class="badge">${escapeHTML(item.status)}</span></div>`).join('') : '<p class="empty">No assigned jobs yet.</p>'}<p class="muted">For service requests, use the service page to contact the requester or admin.</p><a class="button-secondary" href="../pages/services.html" style="display:inline-flex;align-items:center;padding:0 12px;text-decoration:none">Open services</a></section>`;
+}
+
+function renderJobs() {
+  if (currentRole === 'employer') {
+    const jobs = dashboardData.items || [];
+    dashboardView.innerHTML = `<section class="panel-box"><h2>Post a student job</h2><form class="form-grid" data-endpoint="jobs"><div class="field"><label>Job title</label><input name="title" required></div><div class="field"><label>Location</label><input name="location" required></div><div class="field"><label>Job type</label><input name="job_type" placeholder="Part-time, internship..."></div><div class="field"><label>Compensation</label><input name="compensation"></div><div class="field full"><label>Description</label><textarea name="description" required></textarea></div><div class="field full"><label>Requirements</label><textarea name="requirements"></textarea></div><div class="field full"><label>Application instructions</label><textarea name="application_instructions"></textarea></div><div class="form-actions"><button class="button" type="submit">Submit job for review</button></div></form></section><section class="panel-box"><h2>Your job posts</h2>${jobs.length ? jobs.map(job => `<div class="row"><div class="row-main"><strong>${escapeHTML(job.title)}</strong><div class="muted">${escapeHTML(job.location)} · ${escapeHTML(job.status)} · ${Number(job.applications)} applications</div></div></div>`).join('') : '<p class="empty">No jobs posted yet.</p>'}</section>`;
+    return;
+  }
+  const jobs = adminData.jobs || [];
+  dashboardView.innerHTML = `<section class="panel-box"><h2>Manage student jobs</h2>${jobs.length ? `<div class="table-wrap"><table class="table"><thead><tr><th>Title</th><th>Location</th><th>Status</th><th>Actions</th></tr></thead><tbody>${jobs.map(job => `<tr><td>${escapeHTML(job.title)}</td><td>${escapeHTML(job.location)}</td><td>${escapeHTML(job.status)}</td><td>${job.status === 'pending' ? `<button class="button" data-admin-action="approve_job" data-id="${Number(job.id)}">Approve</button><button class="button-secondary" data-admin-action="reject_job" data-id="${Number(job.id)}">Reject</button>` : ''}</td></tr>`).join('')}</tbody></table></div>` : '<p class="empty">No jobs have been posted.</p>'}</section>`;
+}
+
+function renderApplications() {
+  const applications = applicationData || [];
+  dashboardView.innerHTML = `<section class="panel-box"><h2>${currentRole === 'employer' ? 'Applications for your jobs' : 'Your job applications'}</h2>${applications.length ? `<div class="table-wrap"><table class="table"><thead><tr><th>Job</th><th>${currentRole === 'employer' ? 'Applicant' : 'Status'}</th><th>Message</th><th>Submitted</th></tr></thead><tbody>${applications.map(application => `<tr><td>${escapeHTML(application.title)}</td><td>${escapeHTML(currentRole === 'employer' ? application.full_name : application.status || 'Submitted')}${currentRole === 'employer' ? `<br><span class="muted">${escapeHTML(application.email)}</span>` : ''}</td><td>${escapeHTML(application.message || '')}</td><td>${displayDate(application.created_at)}</td></tr>`).join('')}</tbody></table></div>` : '<p class="empty">No applications found.</p>'}<a class="button-secondary" href="../pages/jobs.html" style="display:inline-flex;align-items:center;padding:0 12px;text-decoration:none">Browse student jobs</a></section>`;
+}
+
+function renderProperties() {
+  const properties = housingData.properties || [];
+  dashboardView.innerHTML = `<section class="panel-box">
+    <h2>Add a house</h2>
+    <form class="form-grid" data-endpoint="listings">
+      <input type="hidden" name="latitude" value=""><input type="hidden" name="longitude" value=""><input type="hidden" name="available" value="1">
+      <div class="field"><label>House name</label><input name="title" required></div>
+      <div class="field"><label>City</label><input name="city" required></div>
+      <div class="field"><label>Neighborhood</label><input name="neighborhood"></div>
+      <div class="field"><label>Institution</label><input name="institution"></div>
+      <div class="field"><label>House type</label><select name="listing_type" required><option value="">Choose type</option><option>Hostel</option><option>Single room</option><option>Studio</option><option>Apartment</option></select></div>
+      <div class="field"><label>Monthly rent (FCFA)</label><input name="price" type="number" min="1" required></div>
+      <div class="field full"><label>Description</label><textarea name="description"></textarea></div>
+      <div class="field full"><label>Cover / exterior photo URL (optional)</label><input name="photo_url" type="url"></div>
+      <div class="field full"><label>Interior photo URLs (one URL per line)</label><textarea name="interior_photo_urls" rows="3" placeholder="https://..."></textarea><span class="muted">Add up to 12 interior photos so students can preview the inside.</span></div>
+      <div class="field full"><label><input type="checkbox" name="furnished" value="1"> Furnished</label></div>
+      <div class="form-actions"><button class="button" type="submit">Submit house for review</button></div>
+    </form>
+  </section>
+  <section class="panel-box">
+    <h2>Your houses</h2>
+    ${properties.length ? `<div class="table-wrap"><table class="table"><thead><tr><th>House</th><th>Rent</th><th>Status</th><th>Availability</th><th>Interior photos</th></tr></thead><tbody>
+      ${properties.map(property => `<tr>
+        <td>${escapeHTML(property.title)}<br><span class="muted">${escapeHTML([property.neighborhood,property.city].filter(Boolean).join(', '))}</span></td>
+        <td>${Number(property.price).toLocaleString()} FCFA</td>
+        <td>${escapeHTML(property.status)}</td>
+        <td>${Number(property.available) ? 'Available' : 'Occupied'}</td>
+        <td><form class="inline-form" data-endpoint="listings">
+          <input type="hidden" name="action" value="update_interior_photos"><input type="hidden" name="listing_id" value="${Number(property.id)}">
+          <textarea name="interior_photo_urls" rows="2" aria-label="Interior photo URLs for ${escapeHTML(property.title)}" placeholder="One URL per line">${escapeHTML((property.interior_photos || []).join('\n'))}</textarea>
+          <button class="button-secondary" type="submit">Save photos</button>
+        </form></td>
+      </tr>`).join('')}
+    </tbody></table></div>` : '<p class="empty">No houses have been added.</p>'}
+  </section>`;
+}
+
+function renderAdminUsers() {
+  const users = adminData.users || [];
+  dashboardView.innerHTML = `<section class="panel-box"><h2>Landlords and tenants</h2>${users.length ? `<div class="table-wrap"><table class="table"><thead><tr><th>Name</th><th>Role</th><th>Email / phone</th><th>Status</th><th>Action</th></tr></thead><tbody>${users.map(user => `<tr><td>${escapeHTML(user.full_name)}</td><td>${escapeHTML(user.role)}</td><td>${escapeHTML(user.email)}<br>${escapeHTML(user.phone || '')}</td><td>${Number(user.active) ? 'Active' : 'Suspended'}${Number(user.approved) ? ' · Approved' : ' · Awaiting approval'}</td><td>${user.role !== 'student' && !Number(user.approved) ? `<form class="inline-form" data-endpoint="admin"><input type="hidden" name="action" value="approve_user"><input type="hidden" name="id" value="${Number(user.id)}"><button class="button" type="submit">Approve</button></form>` : ''}<form class="inline-form" data-endpoint="admin"><input type="hidden" name="action" value="${Number(user.active) ? 'suspend_user' : 'activate_user'}"><input type="hidden" name="id" value="${Number(user.id)}"><button class="button-secondary" type="submit">${Number(user.active) ? 'Suspend' : 'Activate'}</button></form></td></tr>`).join('')}</tbody></table></div>` : '<p class="empty">No accounts found.</p>'}</section><section class="panel-box"><h2>Current tenants</h2>${tenantTable(adminData.tenants || [])}</section>`;
+}
+
+function tenantTable(tenants) {
+  if (!tenants.length) return '<p class="empty">No active tenants.</p>';
+  return `<div class="table-wrap"><table class="table"><thead><tr><th>Tenant</th><th>House</th><th>Rent</th><th>Action</th></tr></thead><tbody>${tenants.map(tenant => `<tr><td>${escapeHTML(tenant.tenant_name)} · ${escapeHTML(tenant.email)}</td><td>${escapeHTML(tenant.house_title)} · ${escapeHTML(tenant.city)}</td><td>${Number(tenant.rent_amount).toLocaleString()} FCFA</td><td><button class="button-danger" data-admin-action="end_tenancy" data-id="${Number(tenant.tenancy_id)}">End tenancy</button></td></tr>`).join('')}</tbody></table></div>`;
+}
+
+function renderAdminListings() {
+  const listings = adminData.listings || [];
+  const landlords = adminData.landlords || [];
+  dashboardView.innerHTML = `<section class="panel-box">
+    <h2>Add a house on behalf of a landlord</h2>
+    ${landlords.length ? `<form class="form-grid" data-endpoint="admin">
+      <input type="hidden" name="action" value="add_listing">
+      <div class="field"><label>Landlord</label><select name="landlord_id" required><option value="">Choose landlord</option>${landlords.map(user => `<option value="${Number(user.id)}">${escapeHTML(user.full_name)} · ${escapeHTML(user.email)}</option>`).join('')}</select></div>
+      <div class="field"><label>House name</label><input name="title" required></div>
+      <div class="field"><label>City</label><input name="city" required></div>
+      <div class="field"><label>Neighborhood</label><input name="neighborhood"></div>
+      <div class="field"><label>Institution</label><input name="institution"></div>
+      <div class="field"><label>House type</label><select name="listing_type" required><option value="">Choose type</option><option>Hostel</option><option>Single room</option><option>Studio</option><option>Apartment</option></select></div>
+      <div class="field"><label>Monthly rent (FCFA)</label><input name="price" type="number" min="1" required></div>
+      <div class="field full"><label>Description</label><textarea name="description"></textarea></div>
+      <div class="field full"><label>Cover / exterior photo URL</label><input name="photo_url" type="url"></div>
+      <div class="field full"><label>Interior photo URLs (one URL per line)</label><textarea name="interior_photo_urls" rows="3" placeholder="https://..."></textarea><span class="muted">Add up to 12 interior photos for the house preview.</span></div>
+      <div class="field full"><label><input type="checkbox" name="furnished" value="1"> Furnished</label></div>
+      <div class="form-actions"><button class="button" type="submit">Add and publish house</button></div>
+    </form>` : '<p class="empty">Create or approve a landlord account before adding a house.</p>'}
+  </section>
+  <section class="panel-box">
+    <h2>All houses</h2>
+    ${listings.length ? `<div class="table-wrap"><table class="table"><thead><tr><th>House</th><th>Landlord</th><th>Rent</th><th>Status</th><th>Availability</th><th>Interior photos</th><th>Actions</th></tr></thead><tbody>
+      ${listings.map(listing => `<tr>
+        <td>${escapeHTML(listing.title)}<br><span class="muted">${escapeHTML([listing.neighborhood,listing.city].filter(Boolean).join(', '))}</span></td>
+        <td>${escapeHTML(listing.landlord_name)}</td>
+        <td><form class="inline-form" data-endpoint="admin"><input type="hidden" name="action" value="update_listing_price"><input type="hidden" name="id" value="${Number(listing.id)}"><input type="number" min="1" name="price" value="${Number(listing.price)}" aria-label="New monthly rent"><button class="button-secondary" type="submit">Save</button></form></td>
+        <td>${escapeHTML(listing.status)}</td>
+        <td>${Number(listing.tenant_id) ? 'Occupied' : Number(listing.available) ? 'Available' : 'Unavailable'}</td>
+        <td><form class="inline-form" data-endpoint="admin">
+          <input type="hidden" name="action" value="update_interior_photos"><input type="hidden" name="listing_id" value="${Number(listing.id)}">
+          <textarea name="interior_photo_urls" rows="2" aria-label="Interior photo URLs for ${escapeHTML(listing.title)}" placeholder="One URL per line">${escapeHTML((listing.interior_photos || []).join('\n'))}</textarea>
+          <button class="button-secondary" type="submit">Save photos</button>
+        </form></td>
+        <td>${listing.status === 'pending' ? `<button class="button" data-admin-action="approve_listing" data-id="${Number(listing.id)}">Approve</button><button class="button-secondary" data-admin-action="reject_listing" data-id="${Number(listing.id)}">Reject</button>` : ''}<button class="button-danger" data-admin-action="delete_listing" data-id="${Number(listing.id)}">Delete</button></td>
+      </tr>`).join('')}
+    </tbody></table></div>` : '<p class="empty">No houses have been listed.</p>'}
+  </section>`;
+}
+
+function renderMessages() {
+  if (currentRole === 'student') {
+    const house = housingData.tenancy;
+    if (!house) {
+      dashboardView.innerHTML = '<section class="panel-box"><h2>Message admin</h2><p class="empty">Select a house before starting a house conversation.</p></section>';
+      return;
+    }
+    const messages = housingData.messages || [];
+    dashboardView.innerHTML = `<section class="panel-box"><h2>Ask the admin about ${escapeHTML(house.title)}</h2><div class="message-list">${messages.length ? messages.map(message => `<div class="message-bubble ${Number(message.sender_id) === Number(dashboardData.user_id) ? 'mine' : ''}"><strong>${escapeHTML(message.sender_name)} · ${displayDate(message.created_at)}</strong>${escapeHTML(message.body)}</div>`).join('') : '<p class="empty">No messages yet. Send a message to start the conversation.</p>'}</div><form class="form-grid" data-endpoint="housing"><input type="hidden" name="action" value="send_message"><input type="hidden" name="tenancy_id" value="${Number(house.tenancy_id)}"><div class="field full"><label>Your message</label><textarea name="body" maxlength="4000" required></textarea></div><div class="form-actions"><button class="button" type="submit">Send to admin</button></div></form></section>`;
+    return;
+  }
+  const conversations = adminData.messages || [];
+  const opened = selectedMessages.length ? `<section class="panel-box"><h2>Conversation · ${escapeHTML(selectedMessages[0].house_title || '')}</h2><div class="message-list">${selectedMessages.map(message => `<div class="message-bubble ${message.sender_role === 'admin' ? 'mine' : ''}"><strong>${escapeHTML(message.sender_name)} · ${displayDate(message.created_at)}</strong>${escapeHTML(message.body)}</div>`).join('')}</div><form class="form-grid" data-endpoint="housing"><input type="hidden" name="action" value="send_message"><input type="hidden" name="tenancy_id" value="${Number(selectedTenancyId)}"><div class="field full"><label>Reply to tenant</label><textarea name="body" maxlength="4000" required></textarea></div><div class="form-actions"><button class="button" type="submit">Send reply</button></div></form></section>` : '';
+  dashboardView.innerHTML = `<section class="panel-box"><h2>Tenant conversations</h2>${conversations.length ? conversations.map(conversation => `<div class="row"><div class="row-main"><strong>${escapeHTML(conversation.tenant_name)} · ${escapeHTML(conversation.house_title)}</strong><div class="muted">${escapeHTML(conversation.last_message || '')}</div>${Number(conversation.unread) ? '<span class="badge">Unread</span>' : ''}</div><button class="button-secondary" data-open-conversation="${Number(conversation.tenancy_id)}">Open</button></div>`).join('') : '<p class="empty">No tenant conversations yet.</p>'}</section>${opened}`;
+}
+
+function renderReviews() {
+  if (!housingData.tenancy) {
+    dashboardView.innerHTML = '<section class="panel-box"><h2>Rate your house</h2><p class="empty">Choose a house before leaving a rating.</p></section>';
+    return;
+  }
+  const review = housingData.review || {};
+  dashboardView.innerHTML = `<section class="panel-box"><h2>Rate ${escapeHTML(housingData.tenancy.title)}</h2><form class="form-grid" data-endpoint="housing"><input type="hidden" name="action" value="submit_review"><div class="field"><label>Rating</label><select name="rating" required>${[5,4,3,2,1].map(value => `<option value="${value}" ${Number(review.rating) === value ? 'selected' : ''}>${value} / 5</option>`).join('')}</select></div><div class="field full"><label>Comment</label><textarea name="comment" maxlength="2000">${escapeHTML(review.comment || '')}</textarea></div><div class="form-actions"><button class="button" type="submit">Save rating</button></div></form></section>`;
+}
+
+function renderNotifications() {
+  const notifications = housingData.notifications || [];
+  dashboardView.innerHTML = `${currentRole === 'admin' ? `<section class="panel-box"><h2>Send an update to tenants</h2><form class="form-grid" data-endpoint="admin"><input type="hidden" name="action" value="announcement"><div class="field full"><label>Announcement</label><textarea name="message" maxlength="250" required></textarea></div><div class="form-actions"><button class="button" type="submit">Send update</button></div></form></section>` : ''}<section class="panel-box"><div class="row"><h2>Updates from CampusNest</h2><button class="button-secondary" id="mark-read" type="button">Mark all read</button></div>${notifications.length ? notifications.map(item => `<div class="row"><div class="row-main"><strong>${escapeHTML(item.message)}</strong><div class="muted">${displayDate(item.created_at)}</div></div>${Number(item.is_read) ? '' : '<span class="badge">New</span>'}</div>`).join('') : '<p class="empty">No updates yet.</p>'}</section>`;
+}
+
+function renderAdminActivity() {
+  const activity = adminData.activity || [];
+  dashboardView.innerHTML = `<section class="panel-box"><h2>Platform activity</h2>${activity.length ? `<div class="table-wrap"><table class="table"><thead><tr><th>When</th><th>Actor</th><th>Action</th><th>Target</th><th>Details</th></tr></thead><tbody>${activity.map(item => `<tr><td>${displayDate(item.created_at)}</td><td>${escapeHTML(item.actor_name || 'System')}</td><td>${escapeHTML(item.action)}</td><td>${escapeHTML(item.target_type || '')} ${escapeHTML(item.target_id || '')}</td><td>${escapeHTML(item.details || '')}</td></tr>`).join('')}</tbody></table></div>` : '<p class="empty">No activity recorded yet.</p>'}</section>`;
+}
+
+function renderPage(page) {
+  currentPage = page;
+  document.querySelectorAll('#role-navigation button').forEach(button => button.classList.toggle('active', button.dataset.page === page));
+  if (page === 'overview') renderOverview();
+  else if (page === 'houses') renderHouses();
+  else if (page === 'house') renderCurrentHouse();
+  else if (page === 'properties') renderProperties();
+  else if (page === 'tenants') renderTenants();
+  else if (page === 'services') renderServices();
+  else if (page === 'repairs') renderRepairs();
+  else if (page === 'assigned') renderAssigned();
+  else if (page === 'payments') renderPayments();
+  else if (page === 'messages') renderMessages();
+  else if (page === 'reviews') renderReviews();
+  else if (page === 'notifications') renderNotifications();
+  else if (page === 'users') renderAdminUsers();
+  else if (page === 'listings') renderAdminListings();
+  else if (page === 'jobs') renderJobs();
+  else if (page === 'applications') renderApplications();
+  else if (page === 'activity') renderAdminActivity();
+  else renderOverview();
+  dashboardView.querySelectorAll('[data-open-page]').forEach(button => button.addEventListener('click', () => openPage(button.dataset.openPage)));
+  dashboardView.querySelectorAll('[data-admin-action]').forEach(button => button.addEventListener('click', async () => {
+    if (button.dataset.adminAction === 'delete_listing' && !confirm('Delete this house? This cannot be undone.')) return;
+    if (button.dataset.adminAction === 'end_tenancy' && !confirm('End this tenant\'s housing assignment and make the house available?')) return;
+    await performAction('../php/admin.php', {action:button.dataset.adminAction,id:button.dataset.id});
+  }));
+  dashboardView.querySelectorAll('[data-housing-action]').forEach(button => button.addEventListener('click', async () => {
+    if (!confirm('End this tenant\'s housing assignment and make the house available?')) return;
+    await performAction('../php/housing.php', {action:button.dataset.housingAction,tenancy_id:button.dataset.tenancyId});
+  }));
+  dashboardView.querySelectorAll('[data-open-conversation]').forEach(button => button.addEventListener('click', async () => {
+    try {
+      selectedTenancyId = Number(button.dataset.openConversation);
+      const data = await requestJSON('../php/housing.php?action=conversation&tenancy_id=' + selectedTenancyId);
+      selectedMessages = data.results;
+      await requestJSON('../php/housing.php', {method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({action:'mark_messages_read',tenancy_id:String(selectedTenancyId)})});
+      renderPage('messages');
+    } catch (error) {
+      showNotice(error.message, true);
+    }
+  }));
+  const markRead = dashboardView.querySelector('#mark-read');
+  if (markRead) markRead.addEventListener('click', async () => {
+    await performAction('../php/housing.php', {action:'mark_notifications_read'});
+  });
+  dashboardView.querySelectorAll('form[data-endpoint]').forEach(form => form.addEventListener('submit', async event => {
+    event.preventDefault();
+    const formData = new FormData(form);
+    const decision = event.submitter?.name === 'decision' ? event.submitter.value : '';
+    const values = new URLSearchParams(formData);
+    if (decision) values.set('decision', decision);
+    await performAction(endpointFor(form), values);
+  }));
+}
+
+async function performAction(url, values) {
+  try {
+    await requestJSON(url, {method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:values});
+    alertBox.style.display = 'none';
+    await refreshData();
+    renderPage(currentPage);
+    showNotice('Changes saved.');
+  } catch (error) {
+    showNotice(error.message, true);
+  }
+}
+
+async function openPage(page) {
+  alertBox.style.display = 'none';
+  if (page === 'applications') {
+    try {
+      const data = await requestJSON('../php/applications.php');
+      applicationData = data.results || [];
+    } catch (error) {
+      showNotice(error.message, true);
+    }
+  }
+  renderPage(page);
+}
+
+document.querySelector('#notifications-button').addEventListener('click', () => openPage('notifications'));
+refreshData().then(() => renderPage('overview')).catch(error => {
+  if (error.message.includes('log in')) {
+    location.href = 'login.html';
+    return;
+  }
+  showNotice(error.message, true);
+});
+</script>
+<script src="../javascript/app-i18n.js"></script>
+</body>
+</html>

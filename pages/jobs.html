@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Student Jobs - CampusNest</title>
+  <style>
+    :root{--teal:#0b4f52;--line:#e2e6e7}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:"Segoe UI",Arial,sans-serif}
+    .topbar{height:66px;border-bottom:1px solid var(--line)}
+    .inner{width:min(1160px,calc(100% - 32px));height:100%;margin:auto;display:flex;align-items:center}
+    .brand{color:var(--teal);font-size:20px;font-weight:800;text-decoration:none;margin-right:32px}
+    .inner nav{display:flex;gap:24px;font-size:12px;font-weight:700}
+    .inner nav a,.actions a{color:inherit;text-decoration:none}
+    .actions{margin-left:auto}
+    main{width:min(1160px,calc(100% - 32px));margin:auto;padding:28px 0}
+    .filters{display:grid;grid-template-columns:2fr 1fr 1fr 110px;gap:8px}
+    .filters input,.filters select,.filters button{height:42px;border:1px solid #ccd3d4;border-radius:6px;padding:0 10px}
+    .filters button{background:#f59d15;border:0;font-weight:800}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}
+    .card{border:1px solid var(--line);border-radius:8px;padding:18px}
+    .card h3{margin:0 0 8px}
+    .card p{font-size:12px;line-height:1.5}
+    .meta{color:#687173;font-size:12px}
+    .source{display:inline-block;margin-bottom:10px;padding:4px 8px;border-radius:999px;background:#edf5f4;color:var(--teal);font-size:11px;font-weight:800}
+    .apply{display:inline-flex;margin-top:8px;padding:9px 12px;border-radius:6px;background:var(--teal);color:#fff;text-decoration:none;font-size:12px;font-weight:800}
+    .empty,.notice{grid-column:1/-1;text-align:center;border:1px solid var(--line);border-radius:8px;padding:18px}
+    .notice{margin-top:16px;background:#fff8e8;color:#714d12}
+    @media(max-width:760px){.inner nav{display:none}.filters{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}}
+  </style>
+  <style>
+    @media(max-width:900px){.filters{grid-template-columns:minmax(0,2fr) repeat(2,minmax(0,1fr)) 110px}.filters>*{min-width:0;width:100%}}
+    @media(max-width:760px){.topbar{height:auto}.inner{height:auto;min-height:66px;flex-wrap:wrap;padding:8px 0}.brand{margin-right:12px}.inner nav{order:3;display:flex;flex:0 0 100%;width:100%;gap:18px;overflow-x:auto;padding:8px 0;white-space:nowrap}.filters{grid-template-columns:repeat(2,minmax(0,1fr))}.filters>*{min-width:0;width:100%}.grid{grid-template-columns:1fr}}
+    @media(max-width:480px){.inner,main{width:calc(100% - 24px)}.filters{gap:6px}}
+  </style>
+  <link rel="stylesheet" href="../css/app-theme.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="inner">
+      <a class="brand" href="../index.html"><img class="brand-logo" src="../assets/images/mouse-solution-logo.jpeg" alt="MOUSE Solution"></a>
+      <nav><a href="rooms.html">Rooms</a><a href="jobs.html">Student Jobs</a><a href="services.html">Services</a></nav>
+      <div class="actions"><a href="login.html">Log in</a></div>
+    </div>
+  </header>
+  <main>
+    <h1>Student jobs</h1>
+    <p>Browse CampusNest employer posts and ASTRA vacancies. ASTRA applications follow the instructions in each posting.</p>
+    <div class="filters">
+      <input id="q" placeholder="Keyword" aria-label="Keyword">
+      <input id="location" placeholder="Location" aria-label="Location">
+      <select id="type" aria-label="Job type"><option value="">All types</option><option>Part-time</option><option>Internship</option><option>Remote</option><option>Weekend</option></select>
+      <button id="search" type="button">Search</button>
+    </div>
+    <div id="feed-message" class="notice" role="status" aria-live="polite" hidden></div>
+    <div class="grid" id="results" aria-live="polite"></div>
+  </main>
+  <script>
+    async function readJson(url) {
+      const response = await fetch(url);
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Unable to load jobs.");
+      return data;
+    }
+
+    function renderCard(job) {
+      const card = document.createElement("article");
+      card.className = "card";
+      const source = document.createElement("span");
+      source.className = "source";
+      source.textContent = job.source;
+      const title = document.createElement("h3");
+      title.textContent = job.title || "Untitled job";
+      const meta = document.createElement("div");
+      meta.className = "meta";
+      meta.textContent = [job.location, job.job_type].filter(Boolean).join(" · ");
+      const description = document.createElement("p");
+      description.textContent = job.description || "";
+      card.append(source, title, meta, description);
+      if (job.requirements) {
+        const requirements = document.createElement("p");
+        requirements.textContent = `Requirements: ${job.requirements}`;
+        card.append(requirements);
+      }
+      if (job.compensation) {
+        const compensation = document.createElement("div");
+        compensation.className = "meta";
+        compensation.textContent = job.compensation;
+        card.append(compensation);
+      }
+      if (job.source === "ASTRA") {
+        if (job.application_instructions) {
+          const instructions = document.createElement("p");
+          instructions.textContent = `How to apply: ${job.application_instructions}`;
+          card.append(instructions);
+        }
+        if (job.application_url) {
+          try {
+            const applicationUrl = new URL(job.application_url);
+            if (applicationUrl.protocol === "https:") {
+              const apply = document.createElement("a");
+              apply.className = "apply";
+              apply.href = applicationUrl.href;
+              apply.target = "_blank";
+              apply.rel = "noopener noreferrer";
+              apply.textContent = "Open application link";
+              card.append(apply);
+            }
+          } catch {
+            const invalidUrl = document.createElement("span");
+            invalidUrl.className = "meta";
+            invalidUrl.textContent = "Application link is unavailable.";
+            card.append(invalidUrl);
+          }
+        }
+        if (job.closing_date) {
+          const closingDate = document.createElement("div");
+          closingDate.className = "meta";
+          closingDate.textContent = `Closing date: ${job.closing_date}`;
+          card.append(closingDate);
+        }
+      }
+      return card;
+    }
+
+    async function searchJobs() {
+      const filters = new URLSearchParams({
+        q: document.querySelector("#q").value.trim(),
+        location: document.querySelector("#location").value.trim(),
+        type: document.querySelector("#type").value
+      });
+      const message = document.querySelector("#feed-message");
+      const results = document.querySelector("#results");
+      message.hidden = true;
+      results.replaceChildren();
+
+      const [campus, astra] = await Promise.allSettled([
+        readJson(`../php/jobs.php?${filters}`),
+        readJson(`../php/astra.php?resource=vacancies&${filters}`)
+      ]);
+      if (campus.status !== "fulfilled") {
+        message.hidden = false;
+        message.textContent = campus.reason.message;
+        return;
+      }
+
+      const jobs = (campus.value.results || []).map(job => ({ ...job, source: "CampusNest" }));
+      if (astra.status === "fulfilled") {
+        jobs.push(...(astra.value.results || []).map(job => ({ ...job, source: "ASTRA" })));
+      } else {
+        message.hidden = false;
+        message.textContent = `ASTRA vacancies are temporarily unavailable. ${astra.reason.message}`;
+      }
+
+      if (!jobs.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = "No matching student jobs were found.";
+        results.append(empty);
+        return;
+      }
+      jobs.forEach(job => results.append(renderCard(job)));
+    }
+
+    document.querySelector("#search").addEventListener("click", searchJobs);
+    searchJobs();
+  </script>
+<script src="../javascript/app-i18n.js"></script>
+</body>
+</html>

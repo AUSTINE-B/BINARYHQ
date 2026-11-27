@@ -1,0 +1,112 @@
+:root{
+  --cn-primary:#0A1931;
+  --cn-accent:#B3CFE5;
+  --cn-secondary:#4A7FA7;
+  --cn-button:#1A3D63;
+  --cn-background:#F6FAFD;
+  --cn-ink:#0A1931;
+  --cn-muted:#4A6680;
+  --cn-line:#D8E5EF;
+  --cn-white:#FFFFFF;
+}
+
+html{background:var(--cn-background)}
+body{color:var(--cn-ink)!important;background:var(--cn-background)!important}
+a{color:var(--cn-button)}
+input,textarea,select{color:var(--cn-ink);background-color:var(--cn-white);border-color:var(--cn-line)!important}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--cn-accent);outline-offset:1px;border-color:var(--cn-secondary)!important}
+
+.topbar,.topbar-inner{background:var(--cn-white)}
+.topbar{border-bottom-color:var(--cn-line)!important}
+.brand{color:var(--cn-primary)!important}
+.brand-logo{display:block;width:148px;height:56px;object-fit:contain;object-position:left center;background:#fff;border-radius:4px}
+.sidebar .brand-logo{width:176px;height:58px}
+.redirect-logo{width:min(280px,80vw);height:auto;margin:0 auto 16px}
+.language{background:var(--cn-accent)!important;color:var(--cn-primary)!important}
+.language-toggle{display:inline-flex!important;align-items:center;justify-content:center;min-width:48px;min-height:36px;padding:0 12px;border:1px solid var(--cn-accent);border-radius:8px;background:var(--cn-accent);color:var(--cn-primary)!important;font:700 12px "Segoe UI",Arial,sans-serif;text-decoration:none;cursor:pointer}
+.language-toggle:hover{background:#9EBFD9!important}
+.language-toggle-floating{position:absolute;top:12px;right:12px;z-index:10}
+.signup,.register,.button,.apply,.submit,.search-button,.view-property,.choose-house,.source,.tab.active,.button-secondary,.button-danger{
+  border-radius:8px
+}
+.signup,.register,.button,.apply,.submit,.search-button,.view-property,.choose-house{background:var(--cn-button)!important;color:var(--cn-white)!important;border-color:var(--cn-button)!important}
+.signup:hover,.register:hover,.button:hover,.apply:hover,.submit:hover,.search-button:hover,.view-property:hover,.choose-house:hover{background:var(--cn-secondary)!important}
+.button-secondary{background:var(--cn-accent)!important;color:var(--cn-primary)!important;border-color:var(--cn-accent)!important}
+.button-danger{background:#FFF0F0!important;color:#8B2C24!important;border-color:#F0CACA!important}
+.filter,.tag,.source,.badge{background:var(--cn-accent)!important;color:var(--cn-primary)!important}
+.filter.active{background:var(--cn-secondary)!important;color:var(--cn-white)!important}
+
+.hero{background-color:var(--cn-primary)!important}
+.service-card,.property-card,.card,.panel-box,.action-card,.provider,.request-form,.translator{border-color:var(--cn-line)!important;background:var(--cn-white)!important}
+.account-banner{background:var(--cn-accent)!important;color:var(--cn-primary)!important}
+.property-dialog::backdrop{background:rgba(10,25,49,.68)}
+.property-dialog{background:var(--cn-white);color:var(--cn-ink)}
+.card h3,.property-info h3,.provider-heading h2,.panel-box h2{color:var(--cn-primary)}
+.muted,.meta,.dialog-location,.dialog-description,.pane-header,.count{color:var(--cn-muted)!important}
+.status-pending{color:#725900}.status-paid,.status-approved{color:#2B6A52}.status-rejected{color:#8B2C24}
+
+.sidebar{background:linear-gradient(180deg,var(--cn-primary),var(--cn-button))!important;color:var(--cn-white)!important}
+.nav button,.tabs button{color:#DCEAF5!important}
+.nav button.active,.nav button:hover,.tabs button.active,.tabs button:hover{background:rgba(179,207,229,.18)!important;color:var(--cn-white)!important}
+.brand,.logout{color:var(--cn-white)!important}
+.topbar h1,.profile{color:var(--cn-primary)!important}
+.profile,.top-link,.notification-button,.action-icon{background:var(--cn-accent)!important;color:var(--cn-primary)!important;border-color:var(--cn-accent)!important}
+.table th{background:var(--cn-background)!important;color:var(--cn-muted)!important}
+.table th,.table td,.row,.panel-box,.card,.action-card{border-color:var(--cn-line)!important}
+.message-bubble{background:var(--cn-accent)!important;color:var(--cn-primary)}
+.message-bubble.mine{background:#D9EAF5!important}
+.status-pending{color:#725900}.status-paid,.status-approved{color:#2B6A52}.status-rejected{color:#8B2C24}
+
+.catalog-message,.notice{background:var(--cn-accent)!important;color:var(--cn-primary)!important;border-color:var(--cn-accent)!important}
+.alert{background:#EDF6FC!important;border-color:var(--cn-accent)!important;color:var(--cn-primary)!important}
+.alert.error{background:#FFF0F0!important;border-color:#F0CACA!important;color:#8B2C24!important}
+.empty{color:var(--cn-muted)!important}
+
+:where(
+  .property-card,
+  .service-card,
+  .card,
+  .panel-box,
+  .action-card,
+  .provider,
+  .request-form,
+  .translator,
+  .login-card,
+  .signup-wrap,
+  .details,
+  main>form,
+  .empty,
+  .notice,
+  #map,
+  .account-banner,
+  .catalog-message,
+  .property-dialog,
+  .alert
+){
+  border:0!important;
+  box-shadow:0 8px 24px rgba(10,25,49,.10)!important;
+}
+
+.topbar{
+  border:0!important;
+  box-shadow:0 4px 16px rgba(10,25,49,.08);
+}
+.translator .toolbar,
+.translator .pane:first-child,
+.translator .pane-header,
+.translator .pane-footer{
+  border:0!important;
+}
+.tabs{
+  border:0!important;
+}
+.row{
+  border-bottom:0!important;
+}
+.message-bubble{
+  box-shadow:0 3px 12px rgba(10,25,49,.08);
+}
+.action-card:hover{
+  border:0!important;
+  box-shadow:0 10px 28px rgba(10,25,49,.14)!important;
+}

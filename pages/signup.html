@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create your account - CampusNest</title>
+  <style>
+    :root { --teal:#0b4f52; --ink:#1d2223; --line:#dde2e3; --cream:#fff7d9; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:#f7f8f8; font-family:"Segoe UI",Arial,sans-serif; font-size:14px; }
+    button,input { font:inherit; }
+    .topbar { height:66px; background:#fff; border-bottom:1px solid #edf0f0; }
+    .topbar-inner { width:min(1160px,calc(100% - 64px)); height:100%; margin:auto; display:flex; align-items:center; }
+    .brand { color:var(--teal); font-size:20px; font-weight:800; text-decoration:none; margin-right:32px; }
+    nav { display:flex; align-items:center; gap:28px; font-size:12px; font-weight:700; }
+    nav a,.top-actions a { color:inherit; text-decoration:none; }
+    .top-actions { margin-left:auto; display:flex; align-items:center; gap:14px; }
+    .language { min-width:56px; height:30px; display:grid; place-items:center; border-radius:5px; background:#f1f3f4; font-size:10px; font-weight:700; }
+    .login { font-size:12px; font-weight:700; }
+    .signup { height:46px; display:grid; place-items:center; border-radius:6px; padding:0 19px; color:#fff!important; background:var(--teal); font-size:12px; font-weight:800; }
+
+    main { min-height:calc(100vh - 66px); padding:24px 16px 32px; }
+    .signup-wrap { width:min(410px,100%); margin:auto; }
+    h1 { margin:0 0 18px; text-align:center; font-size:28px; line-height:1.2; }
+    fieldset { margin:0 0 14px; padding:0; border:0; }
+    legend { margin-bottom:12px; padding:0; font-size:13px; font-weight:800; }
+    .role-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+    .role { min-height:40px; border:1.5px solid var(--teal); border-radius:8px; background:#fff; color:var(--ink); cursor:pointer; font-size:12px; font-weight:800; }
+    .role.selected { color:#fff; background:var(--teal); }
+    .details { border:1px solid var(--line); border-radius:8px; background:#fff; padding:18px 20px 20px; }
+    .details legend { float:left; width:100%; margin:0 0 13px; }
+    .field { width:100%; margin:0 0 13px; }
+    .field label { display:block; margin:0 0 6px; font-size:12px; font-weight:700; }
+    .field input { width:100%; height:41px; border:1.5px solid #cfd4d5; border-radius:6px; padding:0 12px; outline:none; }
+    .field input:focus { border-color:var(--teal); box-shadow:0 0 0 2px rgba(11,79,82,.08); }
+    .field input.invalid { border-color:#b42318; }
+    .hint { margin:-8px 0 12px; color:#777d7f; font-size:10px; }
+    .terms { display:flex; align-items:flex-start; gap:7px; margin:2px 0 12px; font-size:11px; }
+    .terms input { margin:2px 0 0; }
+    .submit { width:100%; height:42px; border:0; border-radius:6px; color:#fff; background:var(--teal); font-weight:800; cursor:pointer; }
+    .submit:disabled { opacity:.65; cursor:not-allowed; }
+    .login-link { display:block; margin:14px 0 0; text-align:center; color:#0d5d61; font-size:12px; }
+    .message { display:none; margin:0 0 12px; border-radius:6px; padding:10px; background:#fef1ef; color:#7a271a; font-size:12px; }
+
+    @media (max-width:760px) {
+      .topbar-inner { width:calc(100% - 32px); }
+      nav { display:none; }
+      .top-actions { gap:8px; }
+      main { padding-top:18px; }
+      h1 { font-size:24px; }
+    }
+  </style>
+  <style>
+    @media(max-width:760px){
+      .topbar{height:auto}
+      .topbar-inner{width:calc(100% - 32px);height:auto;min-height:66px;flex-wrap:wrap;padding:8px 0}
+      .brand{margin-right:0}
+      nav{order:3;display:flex;flex:0 0 100%;width:100%;gap:18px;overflow-x:auto;padding:8px 0;white-space:nowrap}
+      .top-actions{gap:8px}
+      .language{display:none}
+      main{padding:18px 12px 28px}
+    }
+    @media(max-width:480px){
+      .topbar-inner{width:calc(100% - 24px)}
+      .role-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .role{min-height:44px;padding:6px;line-height:1.25}
+      .details{padding:16px}
+    }
+  </style>
+    <link rel="stylesheet" href="../css/app-theme.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="../index.html"><img class="brand-logo" src="../assets/images/mouse-solution-logo.jpeg" alt="MOUSE Solution"></a>
+      <nav aria-label="Primary navigation">
+        <a href="../index.html#rooms">Rooms</a><a href="../index.html#map">Map</a><a href="../index.html#jobs">Student Jobs</a><a href="../index.html#repairs">Repairs</a><a href="../index.html#cleaning">Cleaning</a>
+      </nav>
+      <div class="top-actions">
+        <a class="language" href="translator.html">EN / FR</a><a class="login" href="login.html">Log in</a><a class="login" href="dashboard.html">Dashboard</a><a class="signup" href="signup.html">Sign up</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <form class="signup-wrap" id="signup-form" action="../php/sign.php" method="post">
+      <h1>Create your account</h1>
+      <fieldset>
+        <legend>1. Choose your account type</legend>
+        <div class="role-grid">
+          <button class="role selected" type="button" data-role="student">Student</button>
+          <button class="role" type="button" data-role="landlord">Landlord or provider</button>
+          <button class="role" type="button" data-role="repairer">Repairer</button>
+          <button class="role" type="button" data-role="cleaner">Cleaner or company</button>
+          <button class="role" type="button" data-role="employer">Employer</button>
+        </div>
+        <input type="hidden" name="role" id="role" value="student">
+      </fieldset>
+
+      <fieldset class="details">
+        <legend>2. Your details</legend>
+        <div class="message" id="form-message"></div>
+        <div class="field"><label for="full-name">Full name</label><input id="full-name" name="full_name" type="text" autocomplete="name" required></div>
+        <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required></div>
+        <div class="field"><label for="phone">Phone number</label><input id="phone" name="phone" type="tel" value="+237" autocomplete="tel"></div>
+        <div class="field"><label for="institution">Institution</label><input id="institution" name="institution" type="text"></div>
+        <div class="field"><label for="password">Password</label><input id="password" name="password" type="password" autocomplete="new-password" minlength="8" required></div>
+        <p class="hint">At least 8 characters.</p>
+        <div class="field"><label for="confirm-password">Confirm password</label><input id="confirm-password" name="confirm_password" type="password" autocomplete="new-password" required></div>
+        <label class="terms"><input type="checkbox" name="terms" required><span>I accept the terms and privacy notice</span></label>
+        <button class="submit" type="submit">Create account</button>
+      </fieldset>
+      <a class="login-link" href="login.html">I already have an account</a>
+    </form>
+  </main>
+
+  <script>
+    const roles = document.querySelectorAll('.role');
+    roles.forEach((button) => button.addEventListener('click', () => {
+      roles.forEach((item) => item.classList.remove('selected'));
+      button.classList.add('selected');
+      document.querySelector('#role').value = button.dataset.role;
+    }));
+
+    const form = document.querySelector('#signup-form');
+    const message = document.querySelector('#form-message');
+    form.addEventListener('submit', (event) => {
+      const password = document.querySelector('#password');
+      const confirmation = document.querySelector('#confirm-password');
+      if (password.value !== confirmation.value) {
+        event.preventDefault();
+        confirmation.classList.add('invalid');
+        message.textContent = 'Passwords do not match.';
+        message.style.display = 'block';
+        confirmation.focus();
+      } else {
+        confirmation.classList.remove('invalid');
+        message.style.display = 'none';
+      }
+    });
+  </script>
+<script src="../javascript/app-i18n.js"></script>
+</body>
+</html>

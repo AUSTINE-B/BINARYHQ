@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>English-French Translator - CampusNest</title>
+  <style>
+    :root{--teal:#0b4f52;--ink:#1b1f21;--muted:#687173;--line:#dde5e6}
+    *{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",Arial,sans-serif;color:var(--ink);background:#f4f8f8}
+    .topbar{height:68px;border-bottom:1px solid var(--line);background:#fff}.inner{width:min(1120px,calc(100% - 32px));height:100%;margin:auto;display:flex;align-items:center}.brand{color:var(--teal);font-size:20px;font-weight:800;text-decoration:none;margin-right:30px}.inner nav{display:flex;gap:20px}.inner nav a{color:inherit;text-decoration:none;font-size:12px;font-weight:700}.actions{margin-left:auto;display:flex;gap:12px}.actions a{color:inherit;text-decoration:none;font-size:12px;font-weight:700}
+    main{width:min(1120px,calc(100% - 32px));margin:auto;padding:38px 0}.title-row{display:flex;justify-content:space-between;align-items:end;margin-bottom:18px}.title-row h1{margin:0 0 6px}.title-row p{margin:0;color:var(--muted)}
+    .translator{border:1px solid var(--line);border-radius:16px;background:#fff;box-shadow:0 12px 35px rgba(20,70,72,.07);overflow:hidden}.toolbar{min-height:58px;padding:10px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}.language-select{min-height:38px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:0 10px;font-weight:700}.swap{width:38px;height:38px;border:1px solid var(--line);border-radius:50%;background:#fff;font-size:18px;cursor:pointer}.swap:hover{background:#eef7f7}
+    .panes{display:grid;grid-template-columns:1fr 1fr}.pane{min-width:0}.pane:first-child{border-right:1px solid var(--line)}.pane-header{height:44px;padding:10px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:12px;font-weight:700}.pane textarea,.pane output{width:100%;min-height:270px}.pane textarea{resize:vertical;border:0;padding:18px;font:16px/1.6 "Segoe UI",Arial,sans-serif;outline:none}.pane output{display:block;padding:18px;font-size:16px;line-height:1.6;white-space:pre-wrap}.pane output.empty{color:#9aa3a4}.pane-footer{min-height:50px;padding:8px 14px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:flex-end;gap:8px}    .button{min-height:38px;border:0;border-radius:8px;background:var(--teal);color:#fff;padding:0 14px;font-weight:800;cursor:pointer}.button.secondary{border:1px solid var(--line);background:#fff;color:var(--ink)}.count{margin-right:auto;color:var(--muted);font-size:12px}.status{min-height:20px;margin:10px 2px 0;color:#a12d25;font-size:12px}
+    @media(max-width:760px){.inner nav{display:none}.panes{grid-template-columns:1fr}.pane:first-child{border-right:0;border-bottom:1px solid var(--line)}.pane textarea,.pane output{min-height:210px}.title-row{align-items:flex-start}}
+  </style>
+    <link rel="stylesheet" href="../css/app-theme.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="inner">
+      <a class="brand" href="../index.html"><img class="brand-logo" src="../assets/images/mouse-solution-logo.jpeg" alt="MOUSE Solution"></a>
+      <nav><a href="rooms.html">Rooms</a><a href="jobs.html">Student Jobs</a><a href="services.html">Services</a></nav>
+      <div class="actions"><a href="dashboard.html">Dashboard</a></div>
+    </div>
+  </header>
+  <main>
+    <div class="title-row"><div><h1>English - French Translator</h1><p>Translate text in both directions.</p></div></div>
+    <section class="translator" aria-label="Text translator">
+      <div class="toolbar">
+        <select id="source" class="language-select" aria-label="Source language">
+          <option value="auto">Detect language</option>
+          <option value="en">English</option>
+          <option value="fr">French</option>
+        </select>
+        <button id="swap" class="swap" type="button" aria-label="Swap languages" title="Swap languages">⇄</button>
+        <select id="target" class="language-select" aria-label="Translation language">
+          <option value="fr">French</option>
+          <option value="en">English</option>
+        </select>
+      </div>
+      <div class="panes">
+        <div class="pane">
+          <div class="pane-header"><span id="source-label">Text</span><button id="clear" class="button secondary" type="button">Clear</button></div>
+          <textarea id="source-text" maxlength="5000" placeholder="Type or paste English or French text here…" aria-label="Text to translate"></textarea>
+          <div class="pane-footer"><span id="count" class="count">0 / 5,000</span></div>
+        </div>
+        <div class="pane">
+          <div class="pane-header"><span id="target-label">Translation</span><button id="copy" class="button secondary" type="button">Copy</button></div>
+          <output id="result" class="empty" aria-live="polite">Translation will appear here.</output>
+          <div class="pane-footer"><button id="translate" class="button" type="button">Translate</button></div>
+        </div>
+      </div>
+    </section>
+    <p id="status" class="status" role="status"></p>
+  </main>
+  <script>
+    const sourceSelect=document.querySelector('#source');
+    const targetSelect=document.querySelector('#target');
+    const sourceText=document.querySelector('#source-text');
+    const result=document.querySelector('#result');
+    const status=document.querySelector('#status');
+    let timer=null;
+
+    function updateCount(){
+      document.querySelector('#count').textContent=sourceText.value.length.toLocaleString()+' / 5,000';
+    }
+    function setStatus(message){status.textContent=message;}
+    async function translate(){
+      const text=sourceText.value.trim();
+      if(!text){result.textContent='Translation will appear here.';result.className='empty';setStatus('');return;}
+      setStatus('');
+      try{
+        const response=await fetch('../php/translate.php',{
+          method:'POST',
+          headers:{'Content-Type':'application/x-www-form-urlencoded'},
+          body:new URLSearchParams({text,source:sourceSelect.value,target:targetSelect.value})
+        });
+        const data=await response.json();
+        if(!response.ok)throw new Error(data.error||'Unable to translate text.');
+        result.textContent=data.translation;
+        result.className='';
+        document.querySelector('#source-label').textContent=data.source==='fr'?'French':'English';
+        document.querySelector('#target-label').textContent=data.target==='fr'?'French':'English';
+      }catch(error){setStatus(error.message);result.textContent='Translation unavailable.';result.className='empty';}
+    }
+
+    document.querySelector('#translate').addEventListener('click',translate);
+    sourceText.addEventListener('input',()=>{updateCount();clearTimeout(timer);timer=setTimeout(translate,500);});
+    document.querySelector('#clear').addEventListener('click',()=>{sourceText.value='';updateCount();translate();sourceText.focus();});
+    document.querySelector('#swap').addEventListener('click',()=>{
+      if(sourceSelect.value!=='auto'){
+        const oldTarget=targetSelect.value;
+        targetSelect.value=sourceSelect.value;
+        sourceSelect.value=oldTarget;
+      }else{
+        const detectedLabel=document.querySelector('#source-label').textContent;
+        sourceSelect.value=detectedLabel==='French'?'fr':'en';
+        targetSelect.value=sourceSelect.value==='fr'?'en':'fr';
+      }
+      const translated=result.textContent.trim();
+      if(translated&&translated!=='Translation will appear here.'&&translated!=='Translation unavailable.')sourceText.value=translated;
+      translate();
+    });
+    document.querySelector('#copy').addEventListener('click',async()=>{
+      if(!result.textContent.trim()||result.classList.contains('empty'))return;
+      try{await navigator.clipboard.writeText(result.textContent);setStatus('Copied to clipboard.');}
+      catch(error){setStatus('Could not copy automatically.');}
+    });
+    sourceSelect.addEventListener('change',()=>{const target=sourceSelect.value==='fr'?'en':sourceSelect.value==='en'?'fr':targetSelect.value;targetSelect.value=target;translate();});
+    targetSelect.addEventListener('change',translate);
+    updateCount();
+  </script>
+<script src="../javascript/app-i18n.js"></script>
+</body>
+</html>

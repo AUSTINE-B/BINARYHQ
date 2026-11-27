@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rooms - CampusNest</title>
+<style>
+:root{--teal:#0b4f52;--ink:#1d2223;--line:#e2e6e7}*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",Arial,sans-serif;color:var(--ink);background:#fff}.topbar{height:66px;border-bottom:1px solid var(--line);background:#fff}.inner{width:min(1160px,calc(100% - 32px));height:100%;margin:auto;display:flex;align-items:center}.brand{color:var(--teal);font-size:20px;font-weight:800;text-decoration:none;margin-right:32px}nav{display:flex;gap:24px;font-size:12px;font-weight:700}nav a{color:inherit;text-decoration:none}.actions{margin-left:auto;display:flex;gap:10px}.actions a{color:inherit;text-decoration:none;font-size:12px;font-weight:700}.signup{padding:14px 18px;border-radius:6px;background:var(--teal);color:#fff!important}main{width:min(1160px,calc(100% - 32px));margin:auto;padding:28px 0}.filters{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 120px;gap:8px;margin-bottom:22px}.filters input,.filters select,.filters button{height:42px;border:1px solid #ccd3d4;border-radius:6px;padding:0 10px}.filters button{border:0;background:#f59d15;font-weight:800}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.card{min-width:0;overflow:hidden;border:1px solid #e8e9ed;border-radius:18px;background:#fff;box-shadow:0 8px 24px rgba(27,31,33,.06)}.photo{height:178px;margin:8px 8px 0;overflow:hidden;border-radius:13px;background:#eff2f2}.photo img{width:100%;height:100%;display:block;object-fit:cover}.info{padding:10px 14px 13px}.location{margin-bottom:7px;color:#707579;font-size:11px}.info h3{margin:0 0 9px;font-size:14px}.tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:11px}.tag{padding:4px 8px;border-radius:12px;background:#f3f4f5;color:#555b5d;font-size:10px}.card-footer{display:flex;align-items:center;justify-content:space-between;gap:8px}.price{font-size:13px;font-weight:800}.price span{color:#777d80;font-size:10px;font-weight:400}.view-property{min-height:34px;padding:0 14px;border:0;border-radius:9px;background:#1d2223;color:#fff;font-size:11px;font-weight:700;cursor:pointer}.empty{grid-column:1/-1;border:1px solid var(--line);border-radius:8px;padding:30px;text-align:center}#map{height:260px;margin:22px 0;border:1px solid var(--line);border-radius:8px;display:none;place-items:center;background:#edf4f3;color:#4f6868}.property-dialog{width:min(640px,calc(100% - 32px));max-height:calc(100% - 32px);padding:12px;border:0;border-radius:18px;color:var(--ink);box-shadow:0 24px 80px rgba(0,0,0,.28)}.property-dialog::backdrop{background:rgba(18,24,26,.62)}.dialog-image{width:100%;max-height:55vh;display:block;border-radius:12px;object-fit:cover;background:#eff2f2}.dialog-image[hidden]{display:none}.dialog-content{padding:14px 4px 4px}.dialog-content h2{margin:0 0 6px;font-size:20px}.dialog-location,.dialog-description{margin:0 0 10px;color:#656c6e;font-size:13px;line-height:1.5}.dialog-footer{display:flex;justify-content:space-between;align-items:center;gap:12px}.close-dialog{min-height:36px;padding:0 16px;border:1px solid #e1e4e5;border-radius:9px;background:#fff;cursor:pointer}@media(max-width:760px){nav{display:none}.filters{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.photo{height:190px}}
+.dialog-actions{display:flex;gap:8px}.choose-house{min-height:36px;padding:0 14px;border:0;border-radius:9px;background:var(--teal);color:#fff;font-weight:700}.choice-message{display:none;margin:10px 0 0;color:#8b2c24;font-size:12px}
+</style>
+<style>
+.gallery-controls{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:10px}.gallery-controls[hidden],.interior-hint[hidden]{display:none}.gallery-controls button{min-width:34px;min-height:32px;border:1px solid #e1e4e5;border-radius:8px;background:#fff;cursor:pointer}.gallery-status,.interior-hint{color:#656c6e;font-size:12px}.interior-hint{margin:10px 0 0}
+</style>
+<style>
+@media(max-width:900px){.filters{grid-template-columns:minmax(0,2fr) repeat(3,minmax(0,1fr)) 120px}.filters>*{min-width:0;width:100%}}
+@media(max-width:760px){.topbar{height:auto}.inner{height:auto;min-height:66px;flex-wrap:wrap;padding:8px 0}.brand{margin-right:12px}nav{order:3;display:flex;flex:0 0 100%;width:100%;gap:18px;overflow-x:auto;padding:8px 0;white-space:nowrap}.actions{gap:8px}.filters{grid-template-columns:repeat(2,minmax(0,1fr))}.grid{grid-template-columns:1fr}}
+@media(max-width:480px){.inner,main{width:calc(100% - 24px)}.filters{gap:6px}.filters>*{min-width:0;width:100%}.view-property{min-height:40px}.dialog-footer{align-items:stretch;flex-direction:column}}
+</style>
+<link rel="stylesheet" href="../css/app-theme.css">
+</head>
+<body>
+<header class="topbar"><div class="inner"><a class="brand" href="../index.html"><img class="brand-logo" src="../assets/images/mouse-solution-logo.jpeg" alt="MOUSE Solution"></a><nav><a href="rooms.html">Rooms</a><a href="jobs.html">Student Jobs</a><a href="services.html">Services</a></nav><div class="actions"><a href="login.html">Log in</a><a class="signup" href="signup.html">Sign up</a></div></div></header>
+<main><h1>Find accommodation</h1><div class="filters"><input id="q" placeholder="Institution, city or keyword"><input id="city" placeholder="City"><select id="type"><option value="">All types</option><option>Hostel</option><option>Single room</option><option>Studio</option><option>Apartment</option></select><input id="maxPrice" type="number" placeholder="Max FCFA"><button id="search">Search</button></div><div id="map">Map locations appear where valid coordinates are available</div><div class="grid" id="results"></div></main>
+<dialog class="property-dialog" aria-labelledby="dialog-title"><img class="dialog-image" alt=""><div class="gallery-controls" hidden><button class="gallery-previous" type="button" aria-label="Previous photo">&lt;</button><span class="gallery-status" aria-live="polite"></span><button class="gallery-next" type="button" aria-label="Next photo">&gt;</button></div><p class="interior-hint" hidden>Interior photos have not been added to this listing yet.</p><div class="dialog-content"><h2 id="dialog-title"></h2><p class="dialog-location"></p><p class="dialog-description"></p><div class="dialog-footer"><strong class="dialog-price"></strong><div class="dialog-actions"><button class="choose-house" type="button">Choose this house</button><button class="close-dialog" type="button">Close</button></div></div><p class="choice-message" role="status"></p></div></dialog>
+<script>
+const propertyDialog=document.querySelector('.property-dialog');
+let selectedListing=null;
+let galleryItems=[];
+let galleryIndex=0;
+let galleryTitle='Property';
+function renderGallery(){
+  const image=propertyDialog.querySelector('.dialog-image');
+  const controls=propertyDialog.querySelector('.gallery-controls');
+  const hint=propertyDialog.querySelector('.interior-hint');
+  const hasPhoto=galleryItems.length>0;
+  const currentPhoto=galleryItems[galleryIndex];
+  const interiorCount=galleryItems.filter(photo=>photo.kind==='interior').length;
+  image.hidden=!hasPhoto;
+  if(hasPhoto){
+    image.src=resolvePhoto(currentPhoto.url);
+    const viewName=currentPhoto.view||('View '+currentPhoto.number);
+    image.alt=galleryTitle+' — '+(currentPhoto.kind==='cover'?'cover and front elevation':viewName);
+    const position={front:'50% 48%',aerial:'50% 18%',left:'22% 50%',right:'78% 50%'}[currentPhoto.viewKey]||'50% 50%';
+    image.style.objectPosition=position;
+  }
+  const canNavigate=galleryItems.length>1;
+  controls.hidden=!canNavigate&&interiorCount===0;
+  propertyDialog.querySelector('.gallery-previous').hidden=!canNavigate;
+  propertyDialog.querySelector('.gallery-next').hidden=!canNavigate;
+  propertyDialog.querySelector('.gallery-status').textContent=currentPhoto?.kind==='cover'?'Cover and front elevation':(currentPhoto?.view||('View '+(currentPhoto?.number||1)))+' · '+(currentPhoto?.number||1)+' of '+interiorCount;
+  hint.hidden=interiorCount>0;
+}
+function showProperty(item){
+  selectedListing=item;
+  galleryTitle=item.title;
+  propertyDialog.querySelector('#dialog-title').textContent=item.title;
+  propertyDialog.querySelector('.dialog-location').textContent=[item.neighborhood,item.city].filter(Boolean).join(', ');
+  propertyDialog.querySelector('.dialog-description').textContent=item.description||'Contact the listing owner for more information.';
+  propertyDialog.querySelector('.dialog-price').textContent=Number(item.price).toLocaleString('en-US')+' FCFA / month';
+  galleryItems=[
+    ...(item.photo_url?[{url:item.photo_url,kind:'cover'}]:[]),
+    ...(item.interior_photos||[]).filter(Boolean).map((photo,index)=>{
+      const cleanUrl=String(photo).split('#')[0];
+      const viewKey=String(photo).includes('#')?String(photo).split('#')[1]:null;
+      const viewNames={front:'Front elevation',aerial:'Aerial / top view',left:'Left exterior view',right:'Right exterior view'};
+      return {url:cleanUrl,kind:'interior',number:index+1,view:viewNames[viewKey]||('House view '+(index+1)),viewKey};
+    })
+  ];
+  galleryIndex=0;
+  renderGallery();
+  propertyDialog.querySelector('.choice-message').style.display='none';
+  propertyDialog.showModal();
+}
+function resolvePhoto(path){return /^(https?:)?\/\//i.test(path)||path.startsWith('/')?path:'../'+path;}
+propertyDialog.querySelector('.close-dialog').addEventListener('click',()=>propertyDialog.close());
+propertyDialog.querySelector('.gallery-previous').addEventListener('click',()=>{if(galleryItems.length>1){galleryIndex=(galleryIndex-1+galleryItems.length)%galleryItems.length;renderGallery();}});
+propertyDialog.querySelector('.gallery-next').addEventListener('click',()=>{if(galleryItems.length>1){galleryIndex=(galleryIndex+1)%galleryItems.length;renderGallery();}});
+propertyDialog.addEventListener('click',event=>{if(event.target===propertyDialog)propertyDialog.close();});
+propertyDialog.querySelector('.choose-house').addEventListener('click',async()=>{
+  if(!selectedListing)return;
+  const message=propertyDialog.querySelector('.choice-message');
+  try{
+    const response=await fetch('../php/housing.php',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({action:'choose_house',listing_id:selectedListing.id})});
+    const data=await response.json();
+    if(!response.ok)throw new Error(data.error||'Unable to select this house.');
+    location.href='dashboard.html';
+  }catch(error){message.textContent=error.message;message.style.display='block';}
+});
+async function search(){const p=new URLSearchParams({q:document.querySelector('#q').value,city:document.querySelector('#city').value,type:document.querySelector('#type').value,max_price:document.querySelector('#maxPrice').value});const r=await fetch('../php/listings.php?'+p);const data=await r.json();const box=document.querySelector('#results');box.replaceChildren();if(!data.results?.length){box.innerHTML='<div class="empty">No matching accommodation was found.</div>';return;}for(const item of data.results){const card=document.createElement('article');card.className='card';card.innerHTML='<div class="photo"></div><div class="info"><div class="location"></div><h3></h3><div class="tags"></div><div class="card-footer"><div class="price"></div><button class="view-property" type="button">View</button></div></div>';if(item.photo_url){const image=document.createElement('img');image.src=resolvePhoto(item.photo_url);image.alt=item.title;card.querySelector('.photo').append(image);}card.querySelector('.location').textContent=[item.neighborhood,item.city].filter(Boolean).join(', ');card.querySelector('h3').textContent=item.title;const tags=card.querySelector('.tags');[item.listing_type,Number(item.furnished)?'Furnished':''].filter(Boolean).forEach(label=>{const tag=document.createElement('span');tag.className='tag';tag.textContent=label;tags.append(tag);});card.querySelector('.price').innerHTML=Number(item.price).toLocaleString('en-US')+' FCFA <span>/ month</span>';card.querySelector('.view-property').addEventListener('click',()=>showProperty(item));box.append(card);} }
+document.querySelector('#search').addEventListener('click',search);document.querySelector('#q').addEventListener('keydown',e=>{if(e.key==='Enter')search()});const params=new URLSearchParams(location.search);document.querySelector('#q').value=params.get('q')||'';document.querySelector('#city').value=params.get('city')||'';document.querySelector('#type').value=params.get('type')||'';document.querySelector('#maxPrice').value=params.get('max_price')||'';search();
+</script>
+<script src="../javascript/app-i18n.js"></script>
+</body></html>
